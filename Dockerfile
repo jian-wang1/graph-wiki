@@ -9,4 +9,5 @@ RUN apt-get install -y net-tools
 COPY . /findge_wiki/
 RUN npm install -g tiddlywiki@5.2.5
 COPY ./core/modules/server/server.js /usr/local/lib/node_modules/tiddlywiki/core/modules/server/server.js
+COPY ./data/tiddlywiki.info /graph_wiki/data/tiddlywiki.info
 EXPOSE 8080

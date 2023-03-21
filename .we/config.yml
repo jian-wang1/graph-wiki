@@ -1,0 +1,36 @@
+descriptor_version: '2.0'
+project:
+  team_id: CT-212
+  slack_channel: ''
+  pagerduty_team: ''
+  dashboards: []
+apps:
+  - name: graph-wiki
+    build:
+      - name: wiki_build
+        type: docker
+        dockerfile: ./Dockerfile
+        repository: quay.io/wework/graph-wiki
+        command: docker build -f ./Dockerfile
+        artifact_name: graph-wiki
+    deploy:
+      - type: service
+        name: service-0
+        target_name: wek8s-dev-us-west
+        artifact_name: graph-wiki
+        command: tiddlywiki data --listen
+        ports:
+          default: '8080'
+        namespace: central-data
+        class: http
+        custom_hostnames:
+          - wiki.phoenix.dev.wwrk.co
+        instances: 1
+        deploy_strategy: rolling
+        limits:
+          cpu: 2
+          ram: 2048
+        request:
+          cpu: 1
+          ram: 1024
+    resources: []
