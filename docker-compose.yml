@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  wiki:
+    image: quay.io/wework/graph-wiki
+    restart: always
+    command: tiddlywiki data --listen
+    # absolute path
+    volumes:
+      - /path-to-data:/graph_wiki/data
+    ports:
+      - "8080:8080"
