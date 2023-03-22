@@ -1,5 +1,5 @@
 created: 20230314211320593
-modified: 20230316154817648
+modified: 20230322201912132
 tags: [[data model]]
 title: validations
 tmap.id: 49f7002b-a3ea-4370-b174-9600929f41c1
@@ -23,6 +23,6 @@ where
     and mf.region ilike any ('international', 'us & canada')
     and mf.key_ts >= '2023-01-01'
     and mf.activity_type ilike 'mql'
-   and email = 'ben@impellity.com'
+
    -- and email_name is null
 ```

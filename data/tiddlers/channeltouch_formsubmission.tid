@@ -1,5 +1,5 @@
 created: 20230314195614454
-modified: 20230315183210143
+modified: 20230322201734457
 tags: [[data model]]
 title: channeltouch_formsubmission
 tmap.edges: {"32998b32-8bea-4c16-871b-a4fe26524904":{"to":"838d1ff9-a4b2-44e6-9ded-55ae10c12aa0","type":"is subset of"}}
@@ -7,19 +7,13 @@ tmap.id: f1c59131-5805-4666-b45b-fe45898a0b54
 type: text/vnd.tiddlywiki
 
 | CREATED_DATE                  | CLEAN_URL_C                              | EMAIL             | LEAD_SOURCE | STATUS   | BUILDING_INTERESTED_IN_C |
-| 2023-01-25 13:32:30.000 +0000 | https://www.wework.com/en-GB/waysyouwork | ben@impellity.com | WeWork.com  | Deferred | aAd5x000000CanpCAC       |
+| 2023-01-25 13:32:30.000 +0000 | https://www.wework.com/en-GB/waysyouwork | pii | WeWork.com  | Deferred | aAd5x000000CanpCAC       |
 
 
 ```
 select created_date, email, clean_url_c, *
 from fivetran.salesforce_orgc.lead
 where id='00Q5x000020gycjEAA'
-
-select created_date, clean_url_c, email, phone, lead_source, status, building_interested_in_c
-from fivetran.salesforce_orgc.lead
-where email = 'ben@impellity.com'
-      and created_date <='2023-01-25 13:32:30.000'
-      and is_deleted = false
 
 select *
 from growth.growthtech_dw.salesfunnel_channeltouch_formsubmission

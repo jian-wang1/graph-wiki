@@ -1,5 +1,5 @@
 created: 20230314153247615
-modified: 20230316152121658
+modified: 20230322201814202
 tags: [[data model]]
 title: channeltouch_sfmc
 tmap.edges: {"f8b61042-9794-4a00-9534-2ed03b3039c6":{"to":"838d1ff9-a4b2-44e6-9ded-55ae10c12aa0","type":"is subset of"}}
@@ -9,11 +9,11 @@ type: text/vnd.tiddlywiki
 
 
 | SUBSCRIBER_EMAIL  | SFMC_EVENT_ID | SFMC_BU | EVENT_TYPE | EVENT_DATE                    | SF_LEAD_ID         |
-| ben@impellity.com | 895982300     | ORGC    | Open       | 2023-01-27 06:20:18.000 +0000 | 00Q5x000020gycjEAA |
-| ben@impellity.com | 895986451     | ORGC    | Open       | 2023-01-27 06:29:24.000 +0000 | 00Q5x000020gycjEAA |
-| ben@impellity.com | 895990570     | ORGC    | Open       | 2023-01-27 06:37:04.000 +0000 | 00Q5x000020gycjEAA |
-| ben@impellity.com | 898779987     | ORGC    | Open       | 2023-01-31 05:06:32.000 +0000 | 00Q5x000020gycjEAA |
-| ben@impellity.com | 930021495     | ORGC    | Open       | 2023-03-09 09:33:56.000 +0000 | 00Q5x000020gycjEAA |
+| pii | 895982300     | ORGC    | Open       | 2023-01-27 06:20:18.000 +0000 | 00Q5x000020gycjEAA |
+| pii | 895986451     | ORGC    | Open       | 2023-01-27 06:29:24.000 +0000 | 00Q5x000020gycjEAA |
+| pii | 895990570     | ORGC    | Open       | 2023-01-27 06:37:04.000 +0000 | 00Q5x000020gycjEAA |
+| pii | 898779987     | ORGC    | Open       | 2023-01-31 05:06:32.000 +0000 | 00Q5x000020gycjEAA |
+| pii | 930021495     | ORGC    | Open       | 2023-03-09 09:33:56.000 +0000 | 00Q5x000020gycjEAA |
 
 
 

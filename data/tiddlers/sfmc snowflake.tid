@@ -1,0 +1,54 @@
+created: 20230322201256613
+modified: 20230322201600050
+tags: [[data model]]
+title: sfmc snowflake
+tmap.edges: {"432c6e94-fa41-4e84-9fae-cc8fc4ea5967":{"to":"5d5ac27d-04fc-44f3-92c4-401018fa98f2","type":"equivalent"}}
+tmap.id: 450be515-f7ff-4a3b-b5fd-f693a671e86a
+type: text/vnd.tiddlywiki
+
+Event 
+
+```
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_wework.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_apac.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_member_communications.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_emea.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_orgc.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_apac.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_latam.event
+where subscriber_key = '00Q5x000020gycjEAA'
+union all
+select event_type, send_id, subscriber_key, created_date, event_date, modified_date
+from fivetran.sfmc_usci.event
+where subscriber_key = '00Q5x000020gycjEAA'
+order by event_date, created_date, modified_date
+```
+
+Subscriber
+
+
+```
+select *
+from growth.sfmc_all.subscriber
+where subscriber_key='00Q5x000020gycjEAA'
+```
+
