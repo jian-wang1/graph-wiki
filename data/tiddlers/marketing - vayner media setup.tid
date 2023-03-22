@@ -18,13 +18,13 @@ Add the following content to file: ~/.aws/credentials
 ```
 [vayner_1]
 region                = us-east-1
-aws_access_key_id     = AKIASTQXUUUMOAEWDUFS
-aws_secret_access_key = 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
+aws_access_key_id     = 
+aws_secret_access_key = 
 
 [vayner_2]
 region                = us-east-1
-aws_access_key_id     = AKIASTQXUUUMJMJ7VVPR
-aws_secret_access_key = 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
+aws_access_key_id     = 
+aws_secret_access_key = 
 ```
 
 2. unset existing env vars
