@@ -1,0 +1,33 @@
+created: 20230322151721887
+modified: 20230322151732755
+title: backlog tcv/acv impact analysis
+tmap.edges: {"e3cf75a8-03a6-4196-91dc-623ddba7fca1":{"to":"fd650f79-8c9a-4369-84da-c0412e5952be","type":"analyze"}}
+tmap.id: d45bf639-3d61-4595-adc4-d6e7b95b86e3
+type: text/vnd.tiddlywiki
+
+
+```
+select *
+from (
+select
+       t1.REPORT_MONTH as month,
+       t1.backlog_usd as backlog_usd_before,
+       t2.backlog_usd as backlog_usd_after,
+       backlog_usd_after - backlog_usd_before as backlog_diff,
+       (backlog_usd_after - backlog_usd_before) / nullif(backlog_usd_before, 0.0) as backlog_diff_pct
+from (select sum(backlog_usd) as backlog_usd, report_month
+      from (select backlog_usd, report_month from central.cdm_sales.revenue_backlog_primary_reservation_summary
+            where report_month >= date_trunc(year, dateadd(year, -1, current_date))
+               and  report_month <= date_trunc(month, dateadd(month, -1, current_date))
+      ) tt1
+      group by 2 ) t1
+left join (select sum(backlog_usd) as backlog_usd, report_month
+      from (select backlog_usd, report_month from central__dev.cdm_sales.revenue_backlog_primary_reservation_summary
+            where  report_month >= date_trunc(year, dateadd(year, -1, current_date))
+               and  report_month <= date_trunc(month, dateadd(month, -1, current_date))
+      ) tt2
+      group by 2 ) t2
+     on  t1.report_month = t2.report_month
+  )
+ order by 1 desc
+```

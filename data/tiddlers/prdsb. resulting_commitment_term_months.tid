@@ -1,0 +1,13 @@
+created: 20230315202041599
+modified: 20230315202041599
+tags: [[model field]]
+title: prdsb. resulting_commitment_term_months
+tmap.edges: {"92c6ad0a-c701-4b00-b636-cb436b716c95":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"e0581be4-8005-4e63-9ca2-7ea8d4b4344d":{"to":"595ba701-4621-41f1-b38b-30de4340805c","type":"is factor of"}}
+tmap.id: 501a3b49-bbf1-4fc7-9b25-89b9da2bbbbf
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+```
+SUM(CASE WHEN net_term_months>0 THEN net_term_months ELSE 0 END) over (partitio    n by primary_reservation_uuid, deal_uuid) AS resulting_commitment_term_months
+```

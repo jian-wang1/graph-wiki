@@ -1,0 +1,44 @@
+created: 20230322151015678
+modified: 20230322151146909
+title: prds desk impact analysis
+tmap.edges: {"33dbef08-e736-45f0-9b74-d6a539ccfddb":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"analyze"}}
+tmap.id: 7b1bcc5c-1344-4bff-8247-b38fedc7a178
+type: text/vnd.tiddlywiki
+
+
+```
+ WITH dev AS (
+	SELECT
+	date_part(year, sales_reporting_month) AS year,
+    --date_trunc(month, sales_reporting_month) as year,
+	SUM(ifnull(gross_desk_sales, 0.0))  AS gross_desk_sales,
+  	SUM(ifnull(new_desk_sales, 0.0))  AS new_desk_sales,
+    SUM(ifnull(renewal_desk_sales, 0.0))  AS renew_desk_sales
+	FROM CENTRAL__DEV.cdm_sales.primary_reservation_deal_summary
+  where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+          and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+),
+prod AS (
+	SELECT
+	date_part(year, sales_reporting_month) AS year,
+    --date_trunc(month, sales_reporting_month) as year,
+	SUM(ifnull(gross_desk_sales, 0.0))  AS gross_desk_sales,
+  	SUM(ifnull(new_desk_sales, 0.0))  AS new_desk_sales,
+    SUM(ifnull(renewal_desk_sales, 0.0))  AS renew_desk_sales
+	FROM CENTRAL.cdm_sales.primary_reservation_deal_summary
+    where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+          and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+)
+SELECT dev.year,
+     prod.gross_desk_sales, dev.gross_desk_sales, 
+     dev.gross_desk_sales - prod.gross_desk_sales as diff1, 
+     diff1 / nullifzero(prod.gross_desk_sales) as pct,
+     prod.new_desk_sales, dev.new_desk_sales, dev.new_desk_sales - prod.new_desk_sales as diff2, 
+     diff2 / nullifzero(prod.new_desk_sales) as pct2,
+     prod.renew_desk_sales, dev.renew_desk_sales, dev.renew_desk_sales - prod.renew_desk_sales as diff3, 
+     diff3 / nullifzero(prod.renew_desk_sales) as pct3
+FROM prod left join  dev on prod.year = dev.year
+ORDER BY dev.year desc
+```

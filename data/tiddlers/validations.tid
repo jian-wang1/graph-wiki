@@ -1,0 +1,28 @@
+created: 20230314211320593
+modified: 20230316154817648
+tags: [[data model]]
+title: validations
+tmap.id: 49f7002b-a3ea-4370-b174-9600929f41c1
+type: text/vnd.tiddlywiki
+
+touch_id: ''895990570~ORGC~Open''
+
+JIRA ticket: https://jira.weworkers.io/browse/DATAE-11720
+
+```
+select distinct
+    trim(e.email_name) as email_name
+    , concat(e.sfmc_event_id,'~',e.sfmc_bu,'~', E.event_type)
+    , mf.*
+from GROWTH.GROWTHTECH_DW.SALESFUNNEL_CHANNELTOUCH_CAPTURED mf
+left join "GROWTH"."GROWTHTECH_DW"."FACT_SFMC_EMAIL_EVENT" e
+    on concat(e.sfmc_event_id,'~',e.sfmc_bu,'~', E.event_type) = trim(mf.touch_id)
+where 
+    mf.new_team ilike 'Marketing'
+    and mf.new_category ilike 'Email'
+    and mf.region ilike any ('international', 'us & canada')
+    and mf.key_ts >= '2023-01-01'
+    and mf.activity_type ilike 'mql'
+   and email = 'ben@impellity.com'
+   -- and email_name is null
+```

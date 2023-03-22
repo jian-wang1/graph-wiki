@@ -1,0 +1,35 @@
+created: 20230313213146774
+modified: 20230321153124692
+tags: [[model field]]
+title: prdsb.primary_reservation_capacity
+tmap.edges: {"8e3db5f0-9c26-4988-b896-1f27817353c4":{"to":"6b67bb41-6999-4c8a-9053-868c456b1bb3","type":"is factor of"},"c9a4685e-aeaa-41ae-86f2-9e5e50261aa0":{"to":"a8edf012-d79d-455a-946b-5dd73fc1b0c2","type":"is field of"},"4695e9ad-32a8-482a-9c03-112c092290e4":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"d5e8566d-477c-446d-a1f3-75cdd7da07e8":{"to":"c43e4874-b167-4926-9d25-e751fe1100b0","type":"impact"},"c7d1e170-39d1-4221-a520-b2be4eaa592d":{"to":"9fa4a8d0-ef35-4d7d-9d40-ccc042fa7650","type":"impact"}}
+tmap.id: 95ef454a-c4e4-41e0-99ce-8eefb5619bd4
+type: text/vnd.tiddlywiki
+
+!! Definition
+!! 
+
+the latest primary_reservation_capacity from sales_records_base
+
+
+!! troubleshooting case 1#
+!! 
+
+|PRIMARY_RESERVATION_CAPACITY	|PRIMARY_RESERVATION_UUID|
+|21	|17c4a9d0-d312-4918-ba01-a159ed672174|
+|11	|5bf464fc-ffde-40f6-8562-dbaf8c55dcc9|
+
+
+!!! SQL Query
+!!! 
+<details>
+
+```
+select distinct last_value(primary_reservation_capacity) 
+        over (partition by primary_reservation_uuid, deal_uuid order by sales_record_datetime_utc), 
+        primary_reservation_uuid
+from central.cdm_sales_etc.sales_records_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+```
+
+</details>

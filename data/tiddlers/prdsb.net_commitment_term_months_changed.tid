@@ -1,0 +1,29 @@
+created: 20230313212938929
+modified: 20230315200503045
+tags: [[model field]]
+title: prdsb.net_commitment_term_months_changed
+tmap.edges: {"3bf64539-ac8d-4d62-9800-f941cfde3671":{"to":"6b67bb41-6999-4c8a-9053-868c456b1bb3","type":"is factor of"},"a29847bc-45f5-495c-bfc1-01e92247c69f":{"to":"a8edf012-d79d-455a-946b-5dd73fc1b0c2","type":"is field of"},"2dd9ac09-cbbf-4d29-b590-39e6562d6fae":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"c26c5a5f-1dc6-4e14-b9b6-47f48aedd11a":{"to":"595ba701-4621-41f1-b38b-30de4340805c","type":"if negative then zero out"},"eed9332c-4837-48ba-aa70-0a8c208da717":{"to":"ada31c82-6a65-4189-9a74-0be90d9a4ab0","type":"if positive then zero out"},"a823accb-3a00-4e13-88fe-5ce8e497102d":{"to":"0a90a868-2cc1-40d0-ac9f-9cbf5d155434","type":"if negative then zero out"},"d673d3e4-6b52-4720-b9d5-61ac26167ede":{"to":"3c5760d1-c487-43e8-befd-ddf165b3b24b","type":"if positive then zero out"}}
+tmap.id: b1f982af-0b65-4c71-b025-fd96d18b9e2d
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+```
+SUM(sr.committed_value_changed_local) AS net_committed_value_changed_local
+
+```
+
+!! troubleshooting case 1#
+!! 
+
+| NET_COMMITMENT_TERM_MONTHS_CHANGED | PRIMARY_RESERVATION_CAPACITY | RESULTING_OCCUPANCY | RESERVATION_DEAL_ACTIVITY | PRIMARY_RESERVATION_UUID             |
+| -3.54                              | 11                           | 0                   | End PrimaryReservation    | 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 |
+| 3.54                               | 21                           | 21                  | Create PrimaryReservation | 17c4a9d0-d312-4918-ba01-a159ed672174 |
+
+
+```
+select net_commitment_term_months_changed, primary_reservation_capacity, resulting_occupancy, reservation_deal_activity, primary_reservation_uuid,
+ sales_reporting_month, salesforce_opportunity_id, reservable_uuid, reservation_start_date, reservation_end_date, product, product_grouping
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+```

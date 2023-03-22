@@ -1,0 +1,8 @@
+[
+    {
+        "title": "$:/plugins/felixhayashi/tiddlymap/graph/views/deal term lineage/filter/nodes",
+        "text": "",
+        "type": "text/vnd.tiddlywiki",
+        "filter": " [field:tmap.id[6b67bb41-6999-4c8a-9053-868c456b1bb3]] [field:tmap.id[b1f982af-0b65-4c71-b025-fd96d18b9e2d]] [field:tmap.id[95ef454a-c4e4-41e0-99ce-8eefb5619bd4]] [field:tmap.id[c43e4874-b167-4926-9d25-e751fe1100b0]] [field:tmap.id[4571221d-8b3b-45bb-9535-f6af08724a25]] [field:tmap.id[a8edf012-d79d-455a-946b-5dd73fc1b0c2]] [field:tmap.id[a9d6749d-d9fe-4d5d-844e-510e8d2d2225]] [field:tmap.id[21d7c72a-68ba-4f21-a31a-7362c6a87f87]] [field:tmap.id[595ba701-4621-41f1-b38b-30de4340805c]] [field:tmap.id[ada31c82-6a65-4189-9a74-0be90d9a4ab0]] [field:tmap.id[0a90a868-2cc1-40d0-ac9f-9cbf5d155434]] [field:tmap.id[6636a5e4-f42f-410f-bc2f-499a5f1d198a]] [field:tmap.id[0f4eca6a-1d07-4980-b13f-57b5b1ce6939]] [field:tmap.id[fd9931dd-529e-43b8-ab41-d0601686c26e]] [field:tmap.id[459ecca7-0806-461f-bce3-29d24ef1f2b8]] [field:tmap.id[501a3b49-bbf1-4fc7-9b25-89b9da2bbbbf]] [field:tmap.id[ea2ee9c8-0074-48ec-aa8d-4b4c74ea0e8d]] [field:tmap.id[3c5760d1-c487-43e8-befd-ddf165b3b24b]] [field:tmap.id[b3cfe801-4e91-4166-a149-5186d8d9aaf8]] [field:tmap.id[ad8cbd93-a135-4f03-8d64-e722720d384a]] [field:tmap.id[0be900ca-880d-4431-92b2-5bd32dc2e844]] [field:tmap.id[9fa4a8d0-ef35-4d7d-9d40-ccc042fa7650]] [field:tmap.id[166397bd-d08e-469a-a199-e95bbf5060a4]] [field:tmap.id[0d02acf1-ac69-409d-be63-078069a03087]] [field:tmap.id[94643a47-0358-47e8-89a0-bc1d6c26ccf5]] [field:tmap.id[2bd5d2b7-326b-4a85-88fc-dc371548b069]] [field:tmap.id[3a70e8d8-28d6-49b6-9834-750a60aa3e5f]] [field:tmap.id[1ef405e7-7068-4184-9c54-3db992694680]]"
+    }
+]

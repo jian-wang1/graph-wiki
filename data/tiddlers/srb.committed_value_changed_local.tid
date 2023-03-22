@@ -1,0 +1,25 @@
+created: 20230315195644226
+modified: 20230321211210673
+tags: [[model field]]
+title: srb.committed_value_changed_local
+tmap.edges: {"31c46bc9-b628-42a8-8a38-fa1895217c2f":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"8597c932-f38f-4af8-9141-7552143baf29":{"to":"6636a5e4-f42f-410f-bc2f-499a5f1d198a","type":"sum"}}
+tmap.id: 0f4eca6a-1d07-4980-b13f-57b5b1ce6939
+type: text/vnd.tiddlywiki
+
+
+
+
+|SUM(COMMITTED_VALUE_CHANGED_LOCAL) | PRIMARY_RESERVATION_UUID             |
+| -29,695.8                          | 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 |
+| 76,513.13                          | 17c4a9d0-d312-4918-ba01-a159ed672174 |
+
+
+```
+select sum(committed_value_changed_local), primary_reservation_uuid
+from central.cdm_sales_etc.sales_records_base
+where primary_reservation_uuid in ('5bf464fc-ffde-40f6-8562-dbaf8c55dcc9', '17c4a9d0-d312-4918-ba01-a159ed672174')
+      and sales_reporting_month = '2022-02-01'
+      and region = 'US & Canada'
+group by 2
+```
+

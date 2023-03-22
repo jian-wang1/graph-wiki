@@ -1,0 +1,9 @@
+created: 20230314154151660
+modified: 20230315183241310
+tags: [[data model]]
+title: Channeltouch_journey_opportunity_contact_map
+tmap.edges: {"0ca1d247-cf23-4d4b-8b91-22b3604296e7":{"to":"49f7002b-a3ea-4370-b174-9600929f41c1","type":"relate"}}
+tmap.id: a9dc7c1b-804e-42ee-9252-e65ee337315c
+type: text/vnd.tiddlywiki
+
+[[model link|https://github.com/WeConnect/airflow-central-data/blob/master/dags/sales/salesfunnel/models/salesfunnel_staging/Channeltouch_journey_opportunity_contact_map.sql]]

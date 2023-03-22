@@ -1,0 +1,26 @@
+created: 20230316221511595
+modified: 20230316223123759
+tags: [[model field]]
+title: srb.sales_record_reservation_type
+tmap.edges: {"02f8bfa9-7811-494b-b01a-e96e535e088e":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"84ff96c9-b552-48ba-953e-07f1375d11be":{"to":"166397bd-d08e-469a-a199-e95bbf5060a4","type":"impact"}}
+tmap.id: 0d02acf1-ac69-409d-be63-078069a03087
+type: text/vnd.tiddlywiki
+
+
+```
+case
+
+    when reservation_uuid=primary_reservation_uuid THEN 'PrimaryReservation' -- there are certain Hot Desks which are AnywhereReservations, but are also "parent" reservations, so we treat them as PrimaryReservation
+
+
+    -- Sales Record Type will only be discount if the reservation type is a DiscountResrrvation
+    -- however there are certain cases where there is a discount that is being tagged as an add-on, preventing us from getting a true picture of discount
+    -- in such cases we can check the resource name
+    when spaceman_resource_name ilike '%discount%' or lower({{sales_record_type}}) in  ('new discount', 'discount adjustment', 'canceled discount',
+                                     'new discount price', 'discount price adjustment', 'archived discount') then 'DiscountReservation'
+
+    -- everthing else would be an add-on (i.e. not the PrimaryReservation, not the discount)
+    else 'AddOnReservation'
+
+end
+```

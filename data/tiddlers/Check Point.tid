@@ -1,0 +1,26 @@
+created: 20230316182100789
+modified: 20230316221410990
+title: Check Point
+tmap.edges: {"8db6ee77-586e-43fb-8dcc-715061a4c82f":{"to":"21d7c72a-68ba-4f21-a31a-7362c6a87f87","type":"is caused by"},"be4a54c8-627b-4889-a998-34694170f75d":{"to":"6b67bb41-6999-4c8a-9053-868c456b1bb3","type":"is caused by"}}
+tmap.id: ad8cbd93-a135-4f03-8d64-e722720d384a
+type: text/vnd.tiddlywiki
+
+!! Troubleshooting Case #1:
+!!
+
+```
+select t1.net_weighted_avg_commitment_term_by_desks, t1.deal_net_weighted_term
+from central.cdm_sales.deals t1
+left join central.cdm.locations t2
+on t1.location_uuid = t2.uuid
+where  1>0
+       and t1.deal_type='Transfer'
+       and t1.net_weighted_avg_commitment_term_by_desks < deal_net_weighted_term
+       and t1.sales_reporting_month >= '2022-01-01'
+       and t2.region ='US & Canada' 
+      and deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+query result:
+net_weighted_avg_commitment_term_by_desks:  1.68571429
+deal_net_weighted_term: 3.54
+```

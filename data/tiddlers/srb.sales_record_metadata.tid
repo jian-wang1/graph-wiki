@@ -1,0 +1,18 @@
+created: 20230316222246746
+modified: 20230316222714525
+tags: [[model field]]
+title: srb.sales_record_metadata
+tmap.edges: {"f0049879-0326-40b5-b6cc-c833b1d3874e":{"to":"166397bd-d08e-469a-a199-e95bbf5060a4","type":"impact"},"1ec8a0fb-4773-4753-91b1-44d306b0218e":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"}}
+tmap.id: 3a70e8d8-28d6-49b6-9834-750a60aa3e5f
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+
+```
+ object_construct('sales_record_operation',sales_record_operation,
+                   'sales_record_operated_on_object_type',sales_record_operated_on_object_type,
+                   'is_same_month_cancellation',nvl(is_same_month_cancellation,FALSE),
+                   'units_changed',units_changed,
+                   'is_same_month_notice',coalesce(last_create_month_local_prior_to_notice=sales_reporting_month,FALSE)) AS sales_record_metadata
+```

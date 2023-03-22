@@ -1,0 +1,7 @@
+created: 20230315195720050
+modified: 20230321211213697
+tags: [[data model]]
+title: sales_records_base
+tmap.edges: {"8c5535f7-6cd7-414f-a6db-facf46f0e796":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"aggregate"},"3b4faff5-98ab-41a1-9aa7-12d5dd6c05c2":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"is part of"}}
+tmap.id: fd9931dd-529e-43b8-ab41-d0601686c26e
+type: text/vnd.tiddlywiki

@@ -1,0 +1,25 @@
+created: 20230316221936381
+modified: 20230316223058728
+tags: [[model field]]
+title: sales_record_operated_on_object_type
+tmap.edges: {"3ef4608c-f5b5-4878-8b3e-2162650f9190":{"to":"3a70e8d8-28d6-49b6-9834-750a60aa3e5f","type":"is part of"}}
+tmap.id: 94643a47-0358-47e8-89a0-bc1d6c26ccf5
+type: text/vnd.tiddlywiki
+
+
+```
+case
+    when lower(sales_record_type) in ('move in', 'transfer in', 'move out', 'transfer out', 'canceled reservation',
+                                      'archived reservation', 'reservation edit','move out cancellation', 'net zero move out', 'net zero transfer out')
+         then 'PrimaryReservation'
+    when lower(sales_record_type) in ('new commitment','commitment adjustment', 'canceled commitment', 'archived commitment', 'commitment reversion')
+         then 'CommitmentTerm'
+    when lower(sales_record_type) in ('new add-on','add-on adjustment','canceled add-on', 'archived add-on')
+         then 'AddOnReservation'
+    when lower(sales_record_type) in ('new discount','discount adjustment','canceled discount', 'archived discount')
+         then 'DiscountReservation'
+    when lower(sales_record_type) in ('new reservation price', 'reservation price adjustment','new add-on price','add-on price adjustment',
+                                      'new discount price','discount price adjustment')
+         then 'Price'
+end
+```

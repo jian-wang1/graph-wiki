@@ -1,0 +1,48 @@
+created: 20230322151457509
+modified: 20230322151505410
+title: sales record tcv/acv impact
+tmap.edges: {"1b6d4006-c3fc-437d-bd36-65bbbc3553f2":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"analyze"}}
+tmap.id: 79e7f0ba-1a6d-4dba-bc2b-7c740db0f7db
+type: text/vnd.tiddlywiki
+
+
+```
+ WITH
+dev AS (
+	SELECT
+	--date_part(year, sales_reporting_month) AS year,
+    sales_reporting_month,
+	SUM(CASE WHEN tcv_sales_or_loss = 'Sale' THEN committed_value_changed_usd ELSE 0 END) AS tcv_sales,
+	SUM(CASE WHEN tcv_sales_or_loss = 'Loss' THEN committed_value_changed_usd ELSE 0 END) AS tcv_loss,
+	SUM(CASE WHEN acv_sales_or_loss = 'Sale' THEN annualized_committed_value_changed_usd ELSE 0 END) AS acv_sales,
+	SUM(CASE WHEN acv_sales_or_loss = 'Loss' THEN annualized_committed_value_changed_usd ELSE 0 END) AS acv_loss,
+	SUM(CASE WHEN desk_sales_or_loss = 'Sale' THEN desks_changed ELSE 0 END) AS desk_sales,
+	SUM(CASE WHEN desk_sales_or_loss = 'Loss' THEN desks_changed ELSE 0 END) AS desk_loss
+	FROM CENTRAL__DEV.cdm_sales.sales_records
+    where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+        and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+),
+prod AS (
+	SELECT
+	--date_part(year,sales_reporting_month) AS year,
+  	sales_reporting_month ,
+
+	SUM(CASE WHEN tcv_sales_or_loss = 'Sale' THEN committed_value_changed_usd ELSE 0 END) AS tcv_sales,
+	SUM(CASE WHEN tcv_sales_or_loss = 'Loss' THEN committed_value_changed_usd ELSE 0 END) AS tcv_loss,
+	SUM(CASE WHEN acv_sales_or_loss = 'Sale' THEN annualized_committed_value_changed_usd ELSE 0 END) AS acv_sales,
+	SUM(CASE WHEN acv_sales_or_loss = 'Loss' THEN annualized_committed_value_changed_usd ELSE 0 END) AS acv_loss,
+	SUM(CASE WHEN desk_sales_or_loss = 'Sale' THEN desks_changed ELSE 0 END) AS desk_sales,
+	SUM(CASE WHEN desk_sales_or_loss = 'Loss' THEN desks_changed ELSE 0 END) AS desk_loss
+	FROM CENTRAL.CDM_SALES.sales_records
+    where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+        and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+)
+SELECT dev.sales_reporting_month, prod.acv_sales, dev.acv_sales, (prod.acv_sales - dev.acv_sales) / nullifzero(prod.acv_sales) as acv_sales_change_percentage,
+prod.acv_loss, dev.acv_loss, (dev.acv_loss - prod.acv_loss) / nullifzero(prod.acv_loss) as acv_loss_change_percentage
+--prod.desk_sales, dev.desk_sales, (dev.desk_sales - prod.desk_sales) / nullifzero(prod.desk_sales) as desk_sales_change_percentage,
+--prod.desk_loss, dev.desk_loss, (dev.desk_loss - prod.desk_loss) / nullifzero(prod.desk_loss) as desk_loss_change_percentage
+FROM prod left join  dev on prod.sales_reporting_month = dev.sales_reporting_month
+ORDER BY dev.sales_reporting_month desc
+```

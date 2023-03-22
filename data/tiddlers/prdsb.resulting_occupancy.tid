@@ -1,0 +1,38 @@
+created: 20230313213300880
+modified: 20230321153010168
+tags: [[model field]]
+title: prdsb.resulting_occupancy
+tmap.edges: {"cc40a1e7-322b-400e-b896-225e285ecda6":{"to":"6b67bb41-6999-4c8a-9053-868c456b1bb3","type":"is divisor of"},"f80e166c-c25c-4227-baa1-113da5f7feba":{"to":"a8edf012-d79d-455a-946b-5dd73fc1b0c2","type":"is field of"},"a8bce3f1-c5cc-4749-bc3c-be7aec562fed":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"}}
+tmap.id: c43e4874-b167-4926-9d25-e751fe1100b0
+type: text/vnd.tiddlywiki
+
+Code Definition
+
+<details>
+
+```
+prior_occupancy + GREATEST(net_desks_changed, -max(primary_reservation_capacity) AS resulting_occupancy
+```
+
+</details>
+
+
+!! troubleshooting case 1#
+!! 
+
+| PRIMARY_RESERVATION_UUID             | PRIOR_OCCUPANCY | NET_DESKS_CHANGED | -PRIMARY_RESERVATION_CAPACITY | RESULTING_OCCUPANCY |
+| 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 | 11              | -11               | -11                           | 0                   |
+| 17c4a9d0-d312-4918-ba01-a159ed672174 | 0               | 21                | -21                           | 21                  |
+
+
+!!! SQL query
+!!! 
+<details>
+
+```
+select primary_reservation_uuid, prior_occupancy, net_desks_changed, -primary_reservation_capacity, prior_occupancy + greatest(net_desks_changed, -primary_reservation_capacity) as resulting_occupancy
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+```
+
+</details>

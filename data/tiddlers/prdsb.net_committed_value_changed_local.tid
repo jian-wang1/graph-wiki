@@ -1,0 +1,29 @@
+created: 20230315194456754
+modified: 20230315212340246
+tags: [[model field]]
+title: prdsb.net_committed_value_changed_local
+tmap.edges: {"e9648de5-7161-4b07-a629-1232f3ce7206":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"27417514-9b67-440f-be36-e58a3e198363":{"to":"595ba701-4621-41f1-b38b-30de4340805c","type":"is factor of"},"b904efd2-5d96-46d9-a7b1-9c4e74e7caab":{"to":"ada31c82-6a65-4189-9a74-0be90d9a4ab0","type":"is factor of"},"ca5e7c13-7476-45a7-952d-548eb339cb03":{"to":"0a90a868-2cc1-40d0-ac9f-9cbf5d155434","type":"sum"},"01e1bf4e-aa59-40be-8114-f0b5ab31546d":{"to":"21d7c72a-68ba-4f21-a31a-7362c6a87f87","type":"is factor of"},"62efe8dc-b727-4045-8f93-245566fa0992":{"to":"3c5760d1-c487-43e8-befd-ddf165b3b24b","type":"sum"}}
+tmap.id: 6636a5e4-f42f-410f-bc2f-499a5f1d198a
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+```
+SUM(sr.committed_value_changed_local) AS net_committed_value_changed_local
+```
+
+!! Troubleshooting Case #1:
+
+| NET_COMMITTED_VALUE_CHANGED_LOCAL | NET_COMMITMENT_TERM_MONTHS_CHANGED | PRIMARY_RESERVATION_CAPACITY | RESULTING_OCCUPANCY | RESERVATION_DEAL_ACTIVITY | PRIMARY_RESERVATION_UUID             | SALES_REPORTING_MONTH |
+| -29,695.8                         | -3.54                              | 11                           | 0                   | End PrimaryReservation    | 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 | 2022-02-01            |
+| 76,513.13                         | 3.54                               | 21                           | 21                  | Create PrimaryReservation | 17c4a9d0-d312-4918-ba01-a159ed672174 | 2022-02-01            |
+| subtotal = 46,817.33 | |||
+
+```
+select net_committed_value_changed_local, net_commitment_term_months_changed, primary_reservation_capacity, resulting_occupancy, reservation_deal_activity, primary_reservation_uuid,
+ sales_reporting_month, salesforce_opportunity_id, reservable_uuid, reservation_start_date, reservation_end_date, product, product_grouping
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+
+```

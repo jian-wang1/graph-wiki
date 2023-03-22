@@ -1,0 +1,30 @@
+created: 20230316210542111
+modified: 20230316221635885
+tags: [[model field]]
+title: prdsb.net_desks_changed
+tmap.edges: {"f51c77c9-cb06-49c7-a393-a60717408161":{"to":"c43e4874-b167-4926-9d25-e751fe1100b0","type":"impact"},"c29fa7cb-2340-4f1f-86c2-4ffdfab08a24":{"to":"9fa4a8d0-ef35-4d7d-9d40-ccc042fa7650","type":"impact"},"8b0ecb69-3f1b-4eb7-ba7e-c920b7ee3d53":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"}}
+tmap.id: 0be900ca-880d-4431-92b2-5bd32dc2e844
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!!
+
+```
+SUM(CASE WHEN sr.sales_record_type IN ('Net Zero Move Out','Net Zero Transfer Out') OR sr.sales_record_metadata:is_same_month_notice::boolean THEN 0 ELSE sr.desks_changed END) AS net_desks_changed
+```
+
+!! Troubleshooting Case #1
+!! 
+|NET_DESKS_CHANGED|	PRIMARY_RESERVATION_UUID|
+|-11	|5bf464fc-ffde-40f6-8562-dbaf8c55dcc9|
+|21	|17c4a9d0-d312-4918-ba01-a159ed672174|
+
+```
+select 
+SUM(CASE WHEN sr.sales_record_type IN ('Net Zero Move Out','Net Zero Transfer Out') OR sr.sales_record_metadata:is_same_month_notice::boolean THEN 0 ELSE sr.desks_changed END) as net_desks_changed,
+primary_reservation_uuid
+from central.cdm_sales_etc.sales_records_base sr
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+group by 2
+
+```

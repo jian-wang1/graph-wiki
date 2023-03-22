@@ -1,0 +1,96 @@
+created: 20230315191259959
+modified: 20230320180759087
+tags: [[model field]] [[issued field]]
+title: deals.deal_net_weighted_term
+tmap.edges: {"2dac6f25-693b-41b6-9e88-32c84385c484":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"is field of"}}
+tmap.id: 21d7c72a-68ba-4f21-a31a-7362c6a87f87
+type: text/vnd.tiddlywiki
+
+
+!! Code Definition
+!! 
+
+
+<details>
+
+```
+CASE
+   WHEN resulting_commitment_term_weighted_by_tcv - 
+               prior_commitment_term_weighted_by_tcv = 0
+   THEN DIV0NULL(
+                 SUM(
+                     (net_committed_value_changed_local * 
+                      ZEROIFNULL(remaining_commitment_term_months_changed)
+                     )
+                     + 
+                     (net_committed_value_changed_local * 
+                      ZEROIFNULL(resulting_commitment_term_months)
+                     )
+                 ),
+                 --divisor
+                SUM(net_committed_value_changed_local)
+            )
+  ELSE resulting_commitment_term_weighted_by_tcv - 
+                prior_commitment_term_weighted_by_tcv
+END AS deal_net_weighted_term
+```
+</details>
+
+
+!! Troubleshooting Case #1:
+!!
+
+| NET_COMMITTED_VALUE_CHANGED_LOCAL | REMAINING_COMMITMENT_TERM_MONTHS_CHANGED | RESULTING_COMMITMENT_TERM_MONTHS | DIVIDEND     | DIVISOR   |
+| -29,695.8                         | 3.54                                     | 0                                | -105,123.132 | -29,695.8 |
+| 76,513.13                         | 0                                        | 3.54                             | 270,856.4802 | 76,513.13 |
+
+
+
+| DIVIDEND     | DIVISOR   | DEAL_NET_WEIGHTED_TERM |
+| 165,733.3482 | 46,817.33 | 3.54                   |
+
+
+
+!!! SQL Query
+!!! 
+
+<details>
+
+
+```
+select t1.net_weighted_avg_commitment_term_by_desks, t1.deal_net_weighted_term
+from central.cdm_sales.deals t1
+left join central.cdm.locations t2
+on t1.location_uuid = t2.uuid
+where  1>0
+       and t1.deal_type='Transfer'
+       and t1.net_weighted_avg_commitment_term_by_desks < deal_net_weighted_term
+       and t1.sales_reporting_month >= '2022-01-01'
+       and t2.region ='US & Canada' 
+      and deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+query result:
+net_weighted_avg_commitment_term_by_desks:  1.68571429
+deal_net_weighted_term: 3.54
+
+alternative sql query
+select sum(net_committed_value_changed_local * ZEROIFNULL(remaining_commitment_term_months_changed) +
+       net_committed_value_changed_local * ZEROIFNULL(resulting_commitment_term_months)) as dividend ,
+       SUM(net_committed_value_changed_local) as divisor,
+        dividend/divisor as deal_net_weighted_term
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+select net_committed_value_changed_local, remaining_commitment_term_months_changed,
+       resulting_commitment_term_months, 
+       net_committed_value_changed_local * ZEROIFNULL(remaining_commitment_term_months_changed) +
+       net_committed_value_changed_local * ZEROIFNULL(resulting_commitment_term_months) as dividend ,
+       net_committed_value_changed_local as divisor
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+```
+
+</details>
+
+

@@ -1,0 +1,44 @@
+created: 20230313212759186
+modified: 20230321152953667
+tags: [[model field]] [[issued field]]
+title: deals.net_weighted_avg_commitment_term_by_desks
+tmap.edges: {"8e43975e-769a-482d-89ba-071b1bbc2778":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"is field of"}}
+tmap.id: 6b67bb41-6999-4c8a-9053-868c456b1bb3
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+
+<details>
+
+```
+coalesce(sum(t.net_commitment_term_months_changed * t.primary_reservation_capacity) / nullif(sum(t.resulting_occupancy),0),0) as net_weighted_avg_commitment_term_by_desks
+
+```
+
+</details>
+
+
+!! troubleshooting case 1#
+!! 
+
+| NET_COMMITMENT_TERM_MONTHS_CHANGED | PRIMARY_RESERVATION_CAPACITY | RESULTING_OCCUPANCY | RESERVATION_DEAL_ACTIVITY | PRIMARY_RESERVATION_UUID             |
+| -3.54                              | 11                           | 0                   | End PrimaryReservation    | 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 |
+| 3.54                               | 21                           | 21                  | Create PrimaryReservation | 17c4a9d0-d312-4918-ba01-a159ed672174 |
+
+
+!!! SQL Query
+!!! 
+
+<details>
+
+```
+select net_commitment_term_months_changed, primary_reservation_capacity, resulting_occupancy, reservation_deal_activity, primary_reservation_uuid,
+ sales_reporting_month, salesforce_opportunity_id, reservable_uuid, reservation_start_date, reservation_end_date, product, product_grouping
+from central.cdm_sales_etc.primary_reservation_deal_summary_base
+where deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+```
+
+</details>
+
+

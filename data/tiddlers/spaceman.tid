@@ -1,0 +1,30 @@
+created: 20230307201035538
+modified: 20230315182217926
+tags: [[source system]]
+title: spaceman
+tmap.edges: {"37946493-d13c-492a-bc2b-e59b75483487":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"relate"}}
+tmap.id: e9b041b8-0cc0-4766-91bb-dd9a65329e34
+type: text/vnd.tiddlywiki
+
+source of truth for the following fields:
+
+* membership_agreement_id
+* contract_uuid
+* signed_pdf_url
+* is_manual_contract
+* change_request_notes
+* agreement_expired_at
+* is_future_move_in
+* membership_agreement_created_at
+* reservable_name
+* source_app_name
+* product
+* primary_reservation_reservable_uuid
+* primary_reservation_reservable_type
+* is_annual_price_increase 
+* spaceman_reservation_type
+* spaceman_resource_name
+* is_wework_inc_affiliates
+* is_wework_exc_affiliates
+* account_short_code
+* account name

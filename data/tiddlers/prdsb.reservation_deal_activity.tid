@@ -1,0 +1,84 @@
+created: 20230316213644277
+modified: 20230316223244249
+tags: [[model field]]
+title: prdsb.reservation_deal_activity
+tmap.edges: {"83320c35-739c-4494-947b-994e62cfe404":{"to":"9fa4a8d0-ef35-4d7d-9d40-ccc042fa7650","type":"impact"}}
+tmap.id: 166397bd-d08e-469a-a199-e95bbf5060a4
+type: text/vnd.tiddlywiki
+
+
+```
+CASE
+      WHEN
+        SUM(CASE
+          WHEN sr.sales_record_metadata:sales_record_operated_on_object_type::varchar = 'PrimaryReservation'
+           AND sr.sales_record_metadata:sales_record_operation = 'End'
+           AND sr.sales_record_type='Canceled Reservation'
+           THEN 1
+          END)>0
+        THEN 'Cancel PrimaryReservation'
+      WHEN
+        (net_desks_changed >= 0
+          AND
+        SUM(CASE
+          WHEN sr.sales_record_type = 'Move Out Cancellation'
+           THEN 1
+          END)>0)
+          THEN 'Save'
+      WHEN
+        SUM(CASE
+          WHEN sr.sales_record_metadata:sales_record_operated_on_object_type::varchar = 'PrimaryReservation'
+           AND sr.sales_record_metadata:sales_record_operation = 'End'
+           AND NOT(sr.sales_record_type='Canceled Reservation')
+           THEN 1
+          END)>0
+        THEN CASE
+          WHEN
+          -- if they also created the primary reservation that month,
+          -- we don't want the deal type to see Create and End and thus call it Transfer
+          -- so we give it a different name
+          SUM(CASE
+            WHEN sr.sales_record_metadata:sales_record_operated_on_object_type::varchar = 'PrimaryReservation'
+             AND sr.sales_record_metadata:sales_record_operation = 'Create'
+             THEN 1
+             END)>0 THEN 'Create PrimaryReservation with Notice'
+          ELSE 'End PrimaryReservation' END
+      WHEN
+        SUM(CASE
+          WHEN sr.sales_record_metadata:sales_record_operated_on_object_type::varchar = 'PrimaryReservation'
+           AND sr.sales_record_metadata:sales_record_operation = 'Create'
+  THEN 1
+          END)>0
+        THEN 'Create PrimaryReservation'
+      WHEN
+        SUM(CASE
+          WHEN sr.is_on_primary_reservation
+           AND sr.sales_record_metadata:sales_record_operated_on_object_type = 'CommitmentTerm'
+           AND sr.sales_record_metadata:sales_record_operation = 'Create'
+           THEN 1
+          END)>0
+        THEN 'Create CommitmentTerm'
+      WHEN
+        SUM(CASE
+          WHEN sr.is_on_primary_reservation
+           AND sr.sales_record_metadata:sales_record_operated_on_object_type = 'CommitmentTerm'
+           AND sr.sales_record_metadata:sales_record_operation = 'End'
+           THEN 1
+          END)>0
+        THEN 'End CommitmentTerm'
+      WHEN
+        -- has add-on sales records
+        SUM(CASE
+          WHEN sr.sales_record_reservation_type = 'AddOnReservation'
+           THEN 1
+          END)>0
+        AND
+        -- no sales records on PrimaryReserations on th deal
+        SUM(CASE
+          WHEN sr.is_on_primary_reservation
+           THEN 1
+          END)=0
+        THEN 'AddOn'
+    ELSE 'Amendment'
+    END AS reservation_deal_activity,
+```

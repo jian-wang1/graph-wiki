@@ -1,0 +1,14 @@
+created: 20230316222406136
+modified: 20230321210442059
+tags: [[model field]]
+title: is_same_month_cancellation
+tmap.edges: {"8eac09d9-34cd-4cb9-bf57-51186d9d3be2":{"to":"3a70e8d8-28d6-49b6-9834-750a60aa3e5f","type":"is part of"}}
+tmap.id: 1ef405e7-7068-4184-9c54-3db992694680
+type: text/vnd.tiddlywiki
+
+
+```
+  coalesce((date_trunc('month',{{first_date}}) = date_trunc('month',{{second_date}})
+    	  -- should this be abs?
+        or (abs(datediff('month',{{first_date}},{{second_date}}))=1 and date_part('day',GREATEST({{first_date}},{{second_date}}))<=7)),FALSE)
+```

@@ -1,0 +1,7 @@
+created: 20230315194831449
+modified: 20230315195021833
+priority: 1
+scope: [tag[issued field]]
+style: {"color":{"border":"rgba(233,25,31,1)"},"font":{"size":16},"borderWidth":2}
+title: $:/plugins/felixhayashi/tiddlymap/graph/nodeTypes/issued field
+type: text/vnd.tiddlywiki

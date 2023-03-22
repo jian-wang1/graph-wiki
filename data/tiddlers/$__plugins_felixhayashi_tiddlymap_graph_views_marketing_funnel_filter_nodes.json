@@ -1,0 +1,8 @@
+[
+    {
+        "title": "$:/plugins/felixhayashi/tiddlymap/graph/views/marketing_funnel/filter/nodes",
+        "text": "",
+        "type": "text/vnd.tiddlywiki",
+        "filter": " [field:tmap.id[5d5ac27d-04fc-44f3-92c4-401018fa98f2]] [field:tmap.id[680856a1-d910-4dba-bacf-31a95a68a3c5]] [field:tmap.id[a9dc7c1b-804e-42ee-9252-e65ee337315c]] [field:tmap.id[838d1ff9-a4b2-44e6-9ded-55ae10c12aa0]] [field:tmap.id[f1c59131-5805-4666-b45b-fe45898a0b54]] [field:tmap.id[f0b790f2-2445-419a-92f9-c61c794a7075]] [field:tmap.id[20845e59-2750-4283-b9d8-2b74bf1a7ee0]] [field:tmap.id[49f7002b-a3ea-4370-b174-9600929f41c1]]"
+    }
+]

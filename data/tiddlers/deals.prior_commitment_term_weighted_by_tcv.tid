@@ -1,0 +1,35 @@
+created: 20230315193024913
+modified: 20230315193308990
+tags: [[model field]]
+title: deals.prior_commitment_term_weighted_by_tcv
+tmap.edges: {"f6a48e49-f0f3-403a-a28a-1651ed6879ac":{"to":"21d7c72a-68ba-4f21-a31a-7362c6a87f87","type":"impact"}}
+tmap.id: ada31c82-6a65-4189-9a74-0be90d9a4ab0
+type: text/vnd.tiddlywiki
+
+
+```
+    CASE
+        WHEN ABS(deal_prior_tcv) > 0
+        THEN SUM(CASE WHEN net_commitment_term_months_changed > 0 THEN 0 ELSE net_committed_value_changed_local END * COALESCE(remaining_commitment_term_months_changed,0)) / deal_prior_tcv
+        ELSE 0
+    END AS prior_commitment_term_weighted_by_tcv
+```
+
+!! Troubleshooting Case #1:
+!!
+
+```
+select prior_commitment_term_weighted_by_tcv
+from central.cdm_sales.deals t1
+left join central.cdm.locations t2
+on t1.location_uuid = t2.uuid
+where  1>0
+       and t1.deal_type='Transfer'
+       and t1.net_weighted_avg_commitment_term_by_desks < deal_net_weighted_term
+       and t1.sales_reporting_month >= '2022-01-01'
+       and t2.region ='US & Canada' 
+      and deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+
+query result:
+prior_commitment_term_weighted_by_tcv: 3.54
+```

@@ -1,0 +1,19 @@
+created: 20230315205339344
+modified: 20230315205339344
+tags: [[model field]]
+title: deals.deal_prior_tcv
+tmap.edges: {"89c67074-9ec5-413b-97a9-35fd29de8d39":{"to":"ada31c82-6a65-4189-9a74-0be90d9a4ab0","type":"if zero then zero out"}}
+tmap.id: 3c5760d1-c487-43e8-befd-ddf165b3b24b
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+
+```
+SUM(CASE WHEN (
+     net_commitment_term_months_changed is null
+     OR net_commitment_term_months_changed >= 0)
+         THEN 0 
+          ELSE net_committed_value_changed_local
+end) as deal_prior_tcv
+```

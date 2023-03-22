@@ -1,0 +1,19 @@
+created: 20230315205115220
+modified: 20230315205115220
+tags: [[model field]]
+title: prdsb.remaining_commitment_term_months_changed
+tmap.edges: {"9f7ed2ec-2374-4077-8f74-044610b70773":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"216049c7-1973-418e-a30a-7d7835d7fdb6":{"to":"ada31c82-6a65-4189-9a74-0be90d9a4ab0","type":"is factor of"}}
+tmap.id: ea2ee9c8-0074-48ec-aa8d-4b4c74ea0e8d
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+```
+resulting_commitment_term_months - net_commitment_term_months_changed AS remain    ing_commitment_term_months_changed
+```
+
+!! Troubleshooting case #1
+!! 
+
+
+

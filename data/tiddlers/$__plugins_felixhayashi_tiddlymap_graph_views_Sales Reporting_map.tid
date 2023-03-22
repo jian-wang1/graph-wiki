@@ -1,0 +1,41 @@
+title: $:/plugins/felixhayashi/tiddlymap/graph/views/Sales Reporting/map
+type: text/vnd.tiddlywiki
+
+{
+ "ccfca758-b9a3-4d40-a6a6-22f5a5e819ec": {
+  "x": -225,
+  "y": -91
+ },
+ "7b1bcc5c-1344-4bff-8247-b38fedc7a178": {
+  "x": -215,
+  "y": 36
+ },
+ "79e7f0ba-1a6d-4dba-bc2b-7c740db0f7db": {
+  "x": -201,
+  "y": 150
+ },
+ "d45bf639-3d61-4595-adc4-d6e7b95b86e3": {
+  "x": -200,
+  "y": 273
+ },
+ "4571221d-8b3b-45bb-9535-f6af08724a25": {
+  "x": 226,
+  "y": -86
+ },
+ "ebdd3214-eab9-4444-bbe8-8bd42cbe919f": {
+  "x": 199,
+  "y": 156
+ },
+ "a9d6749d-d9fe-4d5d-844e-510e8d2d2225": {
+  "x": 221,
+  "y": 28
+ },
+ "fd650f79-8c9a-4369-84da-c0412e5952be": {
+  "x": 204,
+  "y": 270
+ },
+ "fd9931dd-529e-43b8-ab41-d0601686c26e": {
+  "x": 435,
+  "y": 159
+ }
+}

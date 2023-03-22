@@ -1,0 +1,93 @@
+created: 20230320165723833
+modified: 20230320194031418
+sprint: 3/9 - 3/21
+tags: de-task
+task_priority: 1
+title: marketing - vayner media setup
+tmap.id: d589472d-2ff9-4314-b175-2a0d635a6f98
+type: text/vnd.tiddlywiki
+
+https://jira.weworkers.io/browse/DATAE-11730
+
+
+
+1. set up aws credentials
+Add the following content to file: ~/.aws/credentials
+
+
+```
+[vayner_1]
+region                = us-east-1
+aws_access_key_id     = AKIASTQXUUUMOAEWDUFS
+aws_secret_access_key = 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
+
+[vayner_2]
+region                = us-east-1
+aws_access_key_id     = AKIASTQXUUUMJMJ7VVPR
+aws_secret_access_key = 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
+```
+
+2. unset existing env vars
+
+```
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_REGION
+```
+
+3. export vayner_1 profile
+
+```
+export AWS_PROFILE=vayner_1
+
+```
+
+or
+
+```
+export AWS_PROFILE=vayner_2
+
+```
+
+4. test profile
+
+
+```
+aws configure list
+
+```
+
+5. list bucket 
+
+
+```
+aws s3 ls s3://tracer-wework-user-upload/CUSTOM_PLATFORM/new/wework/SS1/ --recursive --human-readable --summarize
+```
+
+
+
+<<<
+2023-03-08 08:39:06    0 Bytes CUSTOM_PLATFORM/new/wework/SS1/
+
+Total Objects: 1
+   Total Size: 0 Bytes
+<<<
+
+
+or
+
+```
+aws s3 ls  s3://tracer-wework-user-upload/CUSTOM_PLATFORM/new/wework/SS0/ --recursive --human-readable --summarize
+```
+
+
+<<<
+2023-03-08 08:38:55    0 Bytes CUSTOM_PLATFORM/new/wework/SS0/
+
+Total Objects: 1
+   Total Size: 0 Bytes
+<<<
+
+
+
+

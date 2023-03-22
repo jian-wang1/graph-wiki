@@ -1,0 +1,19 @@
+created: 20230314204721930
+modified: 20230315183233384
+tags: [[data model]]
+title: dim_sf_journey
+tmap.edges: {"9f21c9d6-ccb9-41ce-9cbd-4ccbfc8afa43":{"to":"a9dc7c1b-804e-42ee-9252-e65ee337315c","type":"aggregate"}}
+tmap.id: f0b790f2-2445-419a-92f9-c61c794a7075
+type: text/vnd.tiddlywiki
+
+| EMAIL             | PHONE           | JOURNEY_CREATED_TS            | JOURNEY_ID         |
+| ben@impellity.com | +44-07950120888 | 2023-01-25 13:32:31.000 +0000 | aAm5x000001uFZHCA2 |
+
+
+
+
+```
+select *
+from growth__dev.growthtech_dw.GROWTHTECH_DW__DIM_SF_JOURNEY
+where Journey_id='aAm5x000001uFZHCA2'
+```

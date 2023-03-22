@@ -1,0 +1,32 @@
+created: 20230307201035538
+modified: 20230315182049299
+tags: [[data model]]
+title: Sales Record
+tmap.edges: {"b7decf9f-56d8-4e80-9026-fd1cf5917255":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"generate"},"e4363d31-4ef8-46b0-904f-c3b658cc2653":{"to":"fd650f79-8c9a-4369-84da-c0412e5952be","type":"enhance"}}
+tmap.id: ebdd3214-eab9-4444-bbe8-8bd42cbe919f
+type: text/vnd.tiddlywiki
+
+!! Highly aggregated fields:
+!! 
+
+* contract_metadata
+* sales_record_operation
+* sales_record_operated_on_object_type
+* sales_record_reservation_type
+
+
+!! Quantified fields
+!! 
+
+* committed_value_changed_local
+
+
+!! Qualified fields
+!! 
+
+* deal_uuid
+* sales_record_summary
+* is_rebooked_sale
+* is_reverted_term
+* is_annual_price_increase
+* is_legacy_public_kpi_tcv

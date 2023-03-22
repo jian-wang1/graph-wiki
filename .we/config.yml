@@ -28,9 +28,9 @@ apps:
         instances: 1
         deploy_strategy: rolling
         limits:
-          cpu: 2
-          ram: 2048
-        request:
           cpu: 1
           ram: 1024
+        request:
+          cpu: 1
+          ram: 512
     resources: []

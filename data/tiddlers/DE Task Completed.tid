@@ -1,0 +1,13 @@
+created: 20230320144219131
+modified: 20230320173134213
+title: DE Task Completed
+tmap.id: 0a7fc20f-11ec-4189-8a07-1a2f1e80c96d
+type: text/vnd.tiddlywiki
+
+<$list filter="[tag[de-task]!has[draft.of]tag[done]sort[created]]">
+  <$checkbox tag="done">
+     ~~<$link to={{!!title}}>
+          <$view field="title"/> &nbsp;&nbsp;&nbsp; &nbsp;  <$view field="sprint"/>  <br>
+      </$link>~~
+   </$checkbox>
+</$list>

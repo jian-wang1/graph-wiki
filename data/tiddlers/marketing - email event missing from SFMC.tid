@@ -1,0 +1,14 @@
+created: 20230320145127175
+modified: 20230321140712199
+sprint: 3/9 - 3/21
+tags: de-task
+task_priority: 2
+title: marketing - email event missing from SFMC
+tmap.id: 589a63fb-e5bc-4b3c-a473-d8c377c418f0
+type: text/vnd.tiddlywiki
+
+this is a dependency of DATAE-11668
+
+follow up with Tim Schaaf
+
+https://jira.weworkers.io/browse/DATAE-11779

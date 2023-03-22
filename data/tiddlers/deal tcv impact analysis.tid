@@ -1,0 +1,41 @@
+created: 20230322145905399
+modified: 20230322154142822
+title: deal tcv impact analysis
+tmap.edges: {"db7d817f-64fc-4382-aa23-825a2a227114":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"analyze"}}
+tmap.id: ccfca758-b9a3-4d40-a6a6-22f5a5e819ec
+type: text/vnd.tiddlywiki
+
+
+```
+WITH dev AS (
+	SELECT
+	--date_part(year, sales_reporting_month) AS year,
+    sales_reporting_month,
+	SUM(ifnull(net_tcv_usd, 0.0))  AS net_tcv_usd,
+    sum(ifnull(net_acv_usd, 0.0)) as net_acv_usd
+	FROM CENTRAL__DEV.dw.deals
+  where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+        and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+),
+prod AS (
+	SELECT
+	--date_part(year, sales_reporting_month) AS year,
+    sales_reporting_month,
+	SUM(ifnull(net_tcv_usd, 0.0))  AS net_tcv_usd,
+    sum(ifnull(net_acv_usd, 0.0)) as net_acv_usd
+	FROM CENTRAL.cdm_sales.deals
+  where sales_reporting_month >= date_trunc(year, dateadd(year, -1, current_date))
+          and sales_reporting_month <= date_trunc(month, dateadd(month, -1, current_date))
+	GROUP BY 1
+)
+SELECT dev.sales_reporting_month,
+     prod.net_tcv_usd, dev.net_tcv_usd, 
+     dev.net_tcv_usd - prod.net_tcv_usd as diff1, 
+     diff1 / nullifzero(prod.net_tcv_usd) as pct,
+     prod.net_acv_usd, dev.net_acv_usd, dev.net_acv_usd - prod.net_acv_usd as diff3, 
+     diff3 / nullifzero(prod.net_acv_usd) as pct3
+FROM prod left join  dev on prod.sales_reporting_month = dev.sales_reporting_month
+ORDER BY 1 desc
+
+```

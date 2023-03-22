@@ -1,0 +1,47 @@
+created: 20230315192446020
+modified: 20230321160347624
+tags: [[model field]]
+title: deals.resulting_commitment_term_weighted_by_tcv
+tmap.edges: {"8dbc32af-1b29-473c-b716-125399e2250f":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"is field of"},"6ef81038-5f6b-415f-8724-c8858ffd0219":{"to":"21d7c72a-68ba-4f21-a31a-7362c6a87f87","type":"impact"}}
+tmap.id: 595ba701-4621-41f1-b38b-30de4340805c
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+<details>
+
+```
+    CASE
+        WHEN deal_resulting_tcv != 0
+        THEN SUM(CASE WHEN net_commitment_term_months_changed < 0 THEN 0 ELSE net_committed_value_changed_local END * resulting_commitment_term_months) / deal_resulting_tcv
+        ELSE 0
+    END AS resulting_commitment_term_weighted_by_tcv
+```
+
+</details>
+
+!! Troubleshooting Case #1:
+!!
+
+query result:
+resulting_commitment_term_weighted_by_tcv: 3.54
+
+!!! SQL query
+!!! 
+
+<details>
+
+```
+select resulting_commitment_term_weighted_by_tcv
+from central.cdm_sales.deals t1
+left join central.cdm.locations t2
+on t1.location_uuid = t2.uuid
+where  1>0
+       and t1.deal_type='Transfer'
+       and t1.net_weighted_avg_commitment_term_by_desks < deal_net_weighted_term
+       and t1.sales_reporting_month >= '2022-01-01'
+       and t2.region ='US & Canada' 
+      and deal_uuid='5de152d7f915fe6f27da774d684e25d4'
+```
+
+</details>

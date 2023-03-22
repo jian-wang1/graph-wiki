@@ -1,0 +1,20 @@
+created: 20230307201634944
+modified: 20230315182243402
+tags: [[source system]]
+title: Product Service
+tmap.edges: {"ebdcb3e1-8942-414e-9199-511d2f53fd44":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"relate"}}
+tmap.id: 62a6edd0-85f5-499c-943f-ee3c8ea67fb5
+tmap.style: {}
+type: text/vnd.tiddlywiki
+
+Product Service is the alternative (lowest priority) source of truth for: 
+
+* reservable_name
+* product
+* product_grouping
+* primary_reservation_capacity
+* capacity
+* sku
+* sku_today
+* reservable_sku_segment
+* sku_segment_today

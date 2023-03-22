@@ -1,0 +1,34 @@
+created: 20230315210154184
+modified: 20230315214512836
+tags: [[model field]]
+title: prdsb.net_term_months
+tmap.edges: {"8537baba-1eb1-4a9e-b585-9a607df59b79":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"58a993bf-0f87-4f47-a2e4-ec5c8951509c":{"to":"459ecca7-0806-461f-bce3-29d24ef1f2b8","type":"sum"}}
+tmap.id: b3cfe801-4e91-4166-a149-5186d8d9aaf8
+type: text/vnd.tiddlywiki
+
+!! Code Definition
+!! 
+```
+SUM(applied_months) over (partition by primary_reservation_uuid, term_id, deal_uuid) AS net_term_months
+```
+
+
+!! Troubleshooting case #1
+!! 
+
+| SUM(APPLIED_MONTHS) | PRIMARY_RESERVATION_UUID             |
+| -3.54               | 5bf464fc-ffde-40f6-8562-dbaf8c55dcc9 |
+| 3.54                | 17c4a9d0-d312-4918-ba01-a159ed672174 |
+
+
+
+```
+select sum(applied_months), primary_reservation_uuid
+from central.cdm_sales_etc.sales_records_base
+where primary_reservation_uuid in ('5bf464fc-ffde-40f6-8562-dbaf8c55dcc9', '17c4a9d0-d312-4918-ba01-a159ed672174')
+      and sales_reporting_month = '2022-02-01'
+      and region = 'US & Canada'
+      and is_on_primary_reservation = true
+group by 2
+```
+

@@ -1,0 +1,13 @@
+created: 20230307201731074
+modified: 20230315182226852
+tags: [[source system]]
+title: Sales Cloud
+tmap.edges: {"f308240a-c42b-47c6-a145-52a828127548":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"relate"}}
+tmap.id: ee536fb3-be56-4a87-b3f4-eaabd66c5a6b
+type: text/vnd.tiddlywiki
+
+source of truth for the following fields:
+
+* salesforce_opportunity_id
+* is_sublease
+* ci_company_c.size_c -> cdm.is_enterprise, cdm.is_enterprise_500, cdm.roe_segment

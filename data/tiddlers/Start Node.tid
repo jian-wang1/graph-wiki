@@ -1,0 +1,17 @@
+created: 20230307203250706
+modified: 20230307203356840
+title: Start Node
+tmap.id: 5763d82f-4124-4393-b526-a4e933654ee2
+type: text/vnd.tiddlywiki
+
+\define lingo-base() $:/language/ControlPanel/Basics/
+
+<div class="tc-control-panel">
+
+|tc-table-no-border tc-first-col-min-width tc-first-link-nowrap|k
+| <$link to="$:/SiteTitle"><<lingo Title/Prompt>></$link>|<$edit-text tiddler="$:/SiteTitle" default="" tag="input"/> |
+| <$link to="$:/SiteSubtitle"><<lingo Subtitle/Prompt>></$link>|<$edit-text tiddler="$:/SiteSubtitle" default="" tag="input"/> |
+|^ <$link to="$:/DefaultTiddlers"><<lingo DefaultTiddlers/Prompt>></$link><br><<lingo DefaultTiddlers/TopHint>>|<$edit tag="textarea" tiddler="$:/DefaultTiddlers"/><br>//<<lingo DefaultTiddlers/BottomHint>>// |
+</div>
+
+See the [[control panel|$:/ControlPanel]] for more options.

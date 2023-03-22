@@ -1,0 +1,42 @@
+created: 20230307201403282
+modified: 20230315182236018
+tags: [[source system]]
+title: Sales Record Service
+tmap.edges: {"c8e985ba-3e8f-4d80-8554-6b0ae25c50d2":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"relate"}}
+tmap.id: a2be05db-99b5-405b-bf67-bf3f848ebfc6
+type: text/vnd.tiddlywiki
+
+Source of truth for the following fields:
+
+* sales_record_id
+* sales_record_uuid
+* primary_reservation_uuid
+* membership_agreement_uuid
+* currency
+* quantity
+* price
+* type
+* unit_changed
+* contract_kind
+* exchange_rate_value
+* term_id
+* term_start_date
+* term_end_date
+* term_month_remaining
+* record_usd_value
+* applied_months
+* applied_start_date
+* reservation_uuid
+* reservable_uuid
+* promotion_code
+* price_start_time
+* price_end_time
+* product_uuid
+* account_uuid
+* sales_reporting_month
+* sales_record_date
+* sales_record_datetime_utc
+* sales_record_type
+* sales_record_reservation_type
+
+Source table: fivetran.sales_salesrecords_tcv_prod.sales_records

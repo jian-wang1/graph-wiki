@@ -1,0 +1,29 @@
+created: 20230316222028077
+modified: 20230316223001308
+tags: [[model field]]
+title: sales_record_operation
+tmap.edges: {"0df382c1-1897-4569-ada8-07a5e31637fb":{"to":"3a70e8d8-28d6-49b6-9834-750a60aa3e5f","type":"is part of"}}
+tmap.id: 2bd5d2b7-326b-4a85-88fc-dc371548b069
+type: text/vnd.tiddlywiki
+
+
+```
+case
+    when lower(sales_record_type) in ('move in', 'transfer in',
+                                     'new commitment','commitment reversion',
+                                     'new add-on', 'new discount',
+                                     'new add-on price','new discount price','new reservation price') then 'Create'
+
+    when lower(sales_record_type) in ('move out', 'transfer out', 'canceled reservation','archived reservation',
+                                     'commitment adjustment', 'canceled commitment','archived commitment',
+                                     'add-on adjustment','canceled add-on','archived add-on',
+                                     'discount adjustment','canceled discount','archived discount',
+                                     'reservation price adjustment',
+                                     'add-on price adjustment',
+                                     'discount price adjustment',
+                                     'net zero move out', 'net zero transfer out'
+                                     ) then 'End'
+    -- these are the only true row-level "updates" to spaceman objects
+    when lower(sales_record_type) in ('reservation edit','move out cancellation')  then 'Update'
+end
+```

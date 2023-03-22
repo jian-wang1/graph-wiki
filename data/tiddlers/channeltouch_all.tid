@@ -1,0 +1,14 @@
+created: 20230314154254934
+modified: 20230315183220772
+tags: [[data model]]
+title: channeltouch_all
+tmap.edges: {"ab8a6f27-a1a6-4827-abf3-61fc730c0e68":{"to":"680856a1-d910-4dba-bacf-31a95a68a3c5","type":"enhance"}}
+tmap.id: 838d1ff9-a4b2-44e6-9ded-55ae10c12aa0
+type: text/vnd.tiddlywiki
+
+
+```
+select *
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_all
+where email = 'ben@impellity.com'
+```
