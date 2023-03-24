@@ -1,0 +1,34 @@
+created: 20230324164125647
+modified: 20230324171845720
+tags: [[source system]]
+title: Sales Cloud (Lead)
+tmap.edges: {"e1808d29-0b0c-4b3a-a2a1-151d993bcfe1":{"to":"f1c59131-5805-4666-b45b-fe45898a0b54","type":"equivalent"},"2650e548-2065-44c4-ab4f-4c17d529813e":{"to":"b6581344-e353-485e-a474-470b2c7de413","type":"compose of"},"3ac3f0e5-bcea-4651-96dc-5b3b0b292f27":{"to":"af030c0c-6623-45e2-877f-c40bc20bacd7","type":"batch synchronize"},"b4af2e25-ebf6-40a4-a2e7-5b0262176ab1":{"to":"e161a56d-3d76-4461-8e4f-9578b4c230d4","type":"consolidate"}}
+tmap.id: e161a56d-3d76-4461-8e4f-9578b4c230d4
+type: text/vnd.tiddlywiki
+
+[img[Screen Shot 2023-03-22 at 4.37.42 PM.png]]
+
+First referring domain:
+
+<<<
+https://www.wework.com/en-GB/waysyouwork?utm_medium=email&utm_source=marketing_email&utm_campaign=202301-EMEA-GB-ALL-PO-INT_3mo_commitmentpromo_Q1&SFID=
+<<<
+
+
+<details>
+
+```
+select id, created_date, lead_source, lead_source_detail_c, clean_url_c
+from fivetran.salesforce_orgc.lead
+where id='00Q5x000020gycjEAA'
+
+select *
+from growth.growthtech_dw.salesfunnel_channeltouch_formsubmission
+where touch_id = '00Q5x000020gycjEAA~7abdc586-fa0e-4d15-af84-d524d2bb1842~7abdc586-fa0e-4d15-af84-d524d2bb1842_2023-01-25_1~1'
+```
+
+touch_id: ''00Q5x000020gycjEAA~7abdc586-fa0e-4d15-af84-d524d2bb1842~7abdc586-fa0e-4d15-af84-d524d2bb1842_2023-01-25_1~1''
+
+</details>
+
+[[model link|https://github.com/WeConnect/airflow-central-data/blob/master/dags/sales/salesfunnel/models/salesfunnel_reporting/salesfunnel_channeltouch_formsubmission.sql]]

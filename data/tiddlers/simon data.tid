@@ -1,0 +1,7 @@
+created: 20230324183152806
+modified: 20230324183208423
+tags: [[source system]]
+title: simon data
+tmap.edges: {"83a49991-f68e-4223-ae6e-2e379d6e4a15":{"to":"450be515-f7ff-4a3b-b5fd-f693a671e86a","type":"integrate with"},"c5f2667c-2283-466d-8e13-720bbe095997":{"to":"01e1085f-ba00-4a34-8bd7-d4f00683ffdf","type":"dedupe"}}
+tmap.id: 01e1085f-ba00-4a34-8bd7-d4f00683ffdf
+type: text/vnd.tiddlywiki
