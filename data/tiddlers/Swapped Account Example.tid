@@ -1,0 +1,32 @@
+created: 20230406161632449
+filter: 
+modified: 20230406162315761
+sprint: 
+task_priority: 
+title: Swapped Account Example
+tmap.edges: 
+tmap.id: f076e018-0fb3-45a7-90bc-19d9bb6aecdb
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+```
+select 
+    sales_reporting_month,
+    location_uuid,
+    organization_uuid,
+    reservable_uuid,
+    count(distinct deal_uuid) num_deals,
+    count(distinct account_uuid) num_accounts
+select *
+from central.cdm_sales.primary_reservation_deal_summary
+where deal_uuid in ('10d74082877c78df80a8d7e0e476e119','e28f0ccc8974cd2ec2672937e446e39a')
+limit 19
+where 1=1
+    and sales_reporting_month >= '2023-01-01'
+    and region IN ('US & Canada','International')
+    and product_grouping ilike '%office%'
+    and is_cancelled_flag = False
+group by 1,2,3,4
+having num_accounts > 1
+```

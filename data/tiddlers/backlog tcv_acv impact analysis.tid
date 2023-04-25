@@ -1,8 +1,12 @@
 created: 20230322151721887
-modified: 20230322151732755
+filter: 
+modified: 20230328200800115
+sprint: 
+task_priority: 
 title: backlog tcv/acv impact analysis
 tmap.edges: {"e3cf75a8-03a6-4196-91dc-623ddba7fca1":{"to":"fd650f79-8c9a-4369-84da-c0412e5952be","type":"analyze"}}
 tmap.id: d45bf639-3d61-4595-adc4-d6e7b95b86e3
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

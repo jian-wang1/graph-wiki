@@ -1,0 +1,38 @@
+created: 20230406161557482
+filter: 
+modified: 20230406161607180
+sprint: 
+task_priority: 
+title: unconverted lead
+tmap.edges: 
+tmap.id: f05ba785-c004-442d-8c38-45d2324b576f
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+
+```
+with journey_lead as (--sf_journey_id
+    select  lead_id as lead_id
+     from growth.growthtech_dw.dim_sf_journey
+    union
+    select primary_lead as lead_id 
+    from growth.growthtech_dw.dim_sf_journey
+    union
+    select sf_contact_or_lead_id as lead_id
+    from growth.growthtech_dw.dim_sf_journey
+)
+select count(distinct email) as unconverted_lead_email_count, count(1) as unconverted_lead_count, 
+to_date(date_trunc(year, created_date)) as year
+from growth.growthtech_dw.dim_sf_lead t1
+left join journey_lead t2
+on t1.sf_lead_id = t2.lead_id
+where 1>0 
+     and t2.lead_id is null
+and t1.converted_contact_id is null
+and t1.converted_account_id is null
+and t1.sf_account_id is null
+--and created_date > '2022-01-01'
+group by 3
+order by 3 desc
+```

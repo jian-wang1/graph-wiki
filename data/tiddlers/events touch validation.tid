@@ -1,0 +1,53 @@
+created: 20230330154505313
+filter: 
+modified: 20230330174206543
+sprint: 
+task_priority: 
+title: events touch validation
+tmap.edges: {"5abdbddb-d5d2-4584-ab16-2da072bde872":{"to":"52737de0-12a5-4beb-b446-320307fd0ebc","type":"is ansestor of"}}
+tmap.id: 1b403ff5-ef58-47f0-90c8-cca4081339da
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+Note: events is constantly changing, as the consolidation and associations between campaign, campaign_member, journey, lead and contact. So this data may be different. 
+
+To do regression test, we suggest make a copy of this model from production to dev.
+
+
+```
+create or replace table growth__dev.growthtech_dw.salesfunnel_channeltouch_events as
+select * from  growth.growthtech_dw.salesfunnel_channeltouch_events
+```
+
+Validation SQL query
+
+
+```
+with dev as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_events
+where touch_ts<dateadd(day, -14, current_date()) 
+),
+prod as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth.growthtech_dw.salesfunnel_channeltouch_events
+where touch_ts<dateadd(day, -14, current_date()) 
+)
+select *
+from ( 
+    select
+    'total count' as check_point,
+    prod.total_count as value_before ,
+    dev.total_count as value_after,
+    dev.total_count - prod.total_count as change_in_value
+    from prod, dev
+    union all
+    select
+    'touch count' as check_point,
+    prod.touch_count as value_before,
+    dev.touch_count as value_after,
+    dev.touch_count - prod.touch_count as change_in_value
+    from prod, dev
+    )
+where change_in_value <> 0
+```

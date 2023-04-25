@@ -1,0 +1,45 @@
+created: 20230330153634513
+filter: 
+modified: 20230330191052850
+sprint: 
+task_priority: 
+title: referrals touch validation
+tmap.edges: {"17996ce0-a4f8-4df8-aade-4b1130152abe":{"to":"52737de0-12a5-4beb-b446-320307fd0ebc","type":"is ansestor of"}}
+tmap.id: cc45a692-a28e-46c9-95c3-4b23f33d2bc0
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+<details>
+
+```
+with dev as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_referrals
+where touch_ts<dateadd(day, -14, current_date()) 
+),
+prod as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth.growthtech_dw.salesfunnel_channeltouch_referrals
+where touch_ts<dateadd(day, -14, current_date()) 
+)
+select *
+from ( 
+    select
+    'total count' as check_point,
+    prod.total_count as value_before ,
+    dev.total_count as value_after,
+    dev.total_count - prod.total_count as change_in_value
+    from prod, dev
+    union all
+    select
+    'touch count' as check_point,
+    prod.touch_count as value_before,
+    dev.touch_count as value_after,
+    dev.touch_count - prod.touch_count as change_in_value
+    from prod, dev
+    )
+where change_in_value <> 0
+```
+
+</details>

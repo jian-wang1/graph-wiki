@@ -1,9 +1,12 @@
 created: 20230314195614454
+filter: 
 modified: 20230324170624407
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: channeltouch_formsubmission
 tmap.edges: {"32998b32-8bea-4c16-871b-a4fe26524904":{"to":"838d1ff9-a4b2-44e6-9ded-55ae10c12aa0","type":"is subset of"}}
 tmap.id: f1c59131-5805-4666-b45b-fe45898a0b54
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 [img[Screen Shot 2023-03-22 at 4.37.42 PM.png]]

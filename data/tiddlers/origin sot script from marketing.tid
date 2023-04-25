@@ -1,0 +1,577 @@
+created: 20230405163408081
+filter: 
+modified: 20230405163505836
+sprint: 
+task_priority: 
+title: origin sot script from marketing
+tmap.edges: 
+tmap.id: 6ece12ef-e252-46f4-831d-fe6ff50d2e1a
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+<details>
+
+
+```
+with rev_by_user_by_month as (
+        select
+            CUSTOMER_UUID as USER_UUID
+            , date_trunc('month',START_TIME_LOCAL::Date) as month
+            , sum(r.ORDER_AMOUNT_USD-nvl(t.TAX_AMOUNT*r.TO_USD_EXCHANGE_RATE,0)) as rev
+        from    memex.DW_MEMEX.RPT_ONEAPP_BOOKINGS_FACT r
+        left join  memex.logic.LOGIC_ONEAPP_TAX_CODES_MAPPING t
+            on r.BOOKING_UUID = t.BOOKING_UUID
+        join FIVETRAN.SPACEMAN_PUBLIC.USERS u
+            on r.CUSTOMER_UUID = u.UUID
+        where
+            not IS_CANCELLED_FLAG
+            and ON_DEMAND_USER_FLAG
+        group by 1,2
+),
+
+    last_month_pql as (
+        select
+            USER_UUID
+            , month
+            , rev
+            , case
+                    when rev >= 299 then '>$299 PQL'
+                    when rev >= 180 then '$180-298 PQL'
+                    else 'Non-PQL'
+                end as PQL_Status
+        from rev_by_user_by_month
+),
+
+    paid_source_users  as (
+        select
+            parse_json(EVENT_VALUE):user_uuid::string as user_uuid
+            ,'IOS' as platform
+            , CAMPAIGN
+            , MEDIA_SOURCE
+            , AF_AD
+            , EVENT_TIME as creation_date
+        from FIVETRAN.APPSFLYER_ONDEMAND_IOS.EVENT
+        where EVENT_NAME ilike 'User Account Created'
+
+    union
+
+        select
+            parse_json(EVENT_VALUE):user_uuid::string as user_uuid
+            , 'Android' as platform
+            , CAMPAIGN
+            , MEDIA_SOURCE
+            , AF_AD
+            , EVENT_TIME as creation_date
+        from FIVETRAN.APPSFLYER_ONDEMAND_ANDROID.EVENT
+        where EVENT_NAME ilike 'User Account Created'
+),
+
+    user_market as (
+        select
+            r.CUSTOMER_UUID as user_uuid
+            , r.MARKET
+            , r.COUNTRY
+            , case
+                    when r.region = 'International' then l.SUBREGION
+                    else r.region
+                end as region
+            , row_number() over (partition by USER_UUID order by TS_LOCAL asc) as booking_num
+        from memex.DW_MEMEX.RPT_ONEAPP_BOOKINGS_FACT r
+        left join CENTRAL.CDM.LOCATIONS l
+            on r.LOCATION_UUID = l.uuid
+        where
+            ON_DEMAND_USER_FLAG
+            and not IS_CANCELLED_FLAG
+),
+
+    user_first_market as (
+        select
+            USER_UUID
+            , MARKET as user_market
+            , COUNTRY as user_country
+            , REGION as user_region
+        from user_market
+        where booking_num = 1
+),
+
+    users as (
+        select
+            1 as ct
+            , CAMPAIGN
+            , MEDIA_SOURCE
+            , AF_AD
+            , EVENT_TIME as creation_date
+            , 'ios' as platform
+            , COUNTRY_CODE
+        from
+        FIVETRAN.APPSFLYER_ONDEMAND_IOS.EVENT
+        where EVENT_NAME ='User Account Created'
+
+    union
+
+        select
+            1 as ct
+            , CAMPAIGN
+            , MEDIA_SOURCE
+            ,AF_AD
+            , EVENT_TIME as creation_date
+            , 'android' as platform
+            , COUNTRY_CODE
+        from FIVETRAN.APPSFLYER_ONDEMAND_ANDROID.EVENT
+        where EVENT_NAME ='User Account Created'
+),
+
+    one_to_one as (
+        select
+            APPSFLYER_MEDIA_SOURCE
+            , count(distinct PARTNER_OR_PLATFORM) as sources
+        from FIVETRAN.LABS_GS.APPSFLYER_NAMING
+        group by 1
+),
+
+    media_mapping as (
+        select distinct
+            a.APPSFLYER_MEDIA_SOURCE
+            , a.PARTNER_OR_PLATFORM from one_to_one
+        join FIVETRAN.LABS_GS.APPSFLYER_NAMING a
+            on one_to_one.APPSFLYER_MEDIA_SOURCE = a.APPSFLYER_MEDIA_SOURCE
+        where one_to_one.sources = 1
+),
+
+    mapping as (
+        select distinct
+            CAMPAIGN_NAME
+            , APPSFLYER_MEDIA_SOURCE
+            , CHANNEL_CLEAN_
+            , PARTNER_OR_PLATFORM
+            , MARKETING_VS_PARTNERSHIPS
+        from FIVETRAN.LABS_GS.APPSFLYER_NAMING
+),
+
+    region_mapping as (
+        select distinct
+            iff(COUNTRY_CODE = 'GB', 'UK',COUNTRY_CODE) as COUNTRY_CODe
+            , COUNTRY
+            , REGION
+        from central.cdm.LOCATIONS
+        where COUNTRY_CODE is not null
+
+),
+
+    budget_rates as (
+        select
+            *
+        from central.CDM_FINANCE.BUDGET_RATES
+        where
+            years = 'FY22'
+            and REPORT_MONTH = '2022-12-01'
+),
+
+    tax as (
+        select
+            BOOKING_UUID
+            , sum(TAX_AMOUNT) as tax
+        from memex.LOGIC.LOGIC_ONEAPP_TAX_CODES_MAPPING t
+        group by 1
+),
+
+    revenue_and_bookings as (
+        select
+            r._RUN_AT
+            , r.booking_uuid
+            , r.location_uuid
+            , r.location_name
+            , r.city
+            , r.market
+            , r.REGION
+            , r.COUNTRY
+            , r.country_code
+            , r.reservable_uuid
+            , r.reservable_type
+            , r.capacity
+            , r.customer_uuid
+            , r.platform
+            , r.CANCELLED_AT_UTC
+            , r.CANCELLED_AT_LOCAL
+            , r.IS_CANCELLED_FLAG
+            , r.ON_DEMAND_USER_FLAG
+            , r.SPACESTATION_BOOKING_FLAG
+            , r.QOF_BOOKING_FLAG
+            , r.TS_UTC
+            , r.START_TIME_UTC
+            , r.FINISH_TIME_UTC
+            , r.LOCAL_TIME_ZONE
+            , r.TS_LOCAL
+            , r.START_TIME_LOCAL
+            , r.FINISH_TIME_LOCAL
+            , r.RESERVATION_LEAD_TIME_IN_HRS
+            , r.LENGTH_OF_BOOKING_IN_SECONDS
+            , r.LENGTH_OF_BOOKING_IN_HRS
+            , r.USER_BOOKING_SEQUENCE_NUMBER
+            , r.STRIPE_PAYMENT_INTENT_STATUS
+            , r.ORDER_AMOUNT
+            , r.CREDITS
+            , r.TO_USD_EXCHANGE_RATE
+            , r.ORDER_AMOUNT_USD
+            , r.PROMO_CODE
+            , r.PROMO_DISCOUNT
+            , r.LAUNCH_DATE_ON_DEMAND
+            , r.IS_ACTIVE_ON_DEMAND_LOC
+            , r.CLOSE_DATE_ON_DEMAND
+            , r.BUSINESS_DAYS_SINCE_OPEN_FOR_ON_DEMAND
+            , r.START_TIME_LOCAL as key_ts
+            , l.TERRITORY
+            , case
+                    when r.REGION = 'International' then l.SUBREGION
+                    else r.region
+                end as region_final
+            , PQL_Status as pql_status_last_month
+            , um.user_market
+            , um.user_country
+            , um.user_region
+            , (r.ORDER_AMOUNT-nvl(t.tax,0))*nvl(br.BUDGET_RATE,l.TO_USD_EXCHANGE_RATE) as rev_exl_tax
+            , u.NAME
+            , u.EMAIL
+            , case
+                    when r.COUNTRY = 'United States' then '2020-08-03'
+                    when r.country in ('Canada','Australia','Singapore') then '2021-06-22'
+                    when r.country in ('United Kingdom', 'Ireland') then '2021-08-24'
+                end as go_live_date
+            , row_number() over (partition by r.CUSTOMER_UUID order by TS_LOCAL asc) as booking_num
+            , case
+                    when p.user_uuid is not null then 'Paid'
+                    else 'Organic'
+                end as paid_vs_organic
+            , p.campaign
+            , p.media_source
+            , case
+                    when nvl(mapping.CHANNEL_CLEAN_, p.campaign) in ('Paid Media', 'Email', 'Website', 'Global_Global_Cyber Monday Promo', 'Partnerships', 'Organic') then nvl(mapping.CHANNEL_CLEAN_, p.campaign)
+                    when nvl(mapping.CHANNEL_CLEAN_, p.campaign) ilike ('%influencer%') then  'Influencer'
+                    when INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, p.media_source)) = 'Community Team' then 'Community Selling'
+                    when INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, p.media_source)) in ('Google Uac', 'Apple Search Ads', 'Facebook Ads') then 'Paid Media'
+                    when MEDIA_SOURCE = 'organic' then 'Direct to App'
+                    when
+                        CAMPAIGN in(   'Global_Global_Website_wework.com_On Demand PDP _PNM-613',
+                                        'INT_US and UK_Landing page_wework.com_Paid Search Test_Paid Search Workspace Sign Up _PNM-330',
+                                        'Global_One App Migration_FAQ',
+                                        'Global_Global_Landing page_wework.com_Meeting Rooms PDP_PNM-613',
+                                        'Global_Global_Member Web QR Code_OD',
+                                        'Global_Global_Website_QR Code_On Demand PDP _PNM-720',
+                                        'landing page',
+                                        'Global_Global_Landing page_wework.com__Zendesk Flex Office Program_PNM-613',
+                                        'Global_Global_Website_wework.com__All Access PDP get started mod_PNM-616',
+                                        'Global_Global_Landing page_wework.com_On Demand Availability Location Reference_All-613',
+                                        'Global_Global_Landing page_wework.com__All Access FAQ_All-613',
+                                        'Global_Global_Landing page_wework.com__Friends n Family Offer 2022_PNM-812',
+                                        'Global_Global_Website_wework.com_Contact Us Page_Contact Us Page App Download_All-426',
+                                        'Global_Global_Website_wework.com_Contact Us Page - Response Message (Other, Workspace)_Contact Us Page Response                             Message App Download_All-325',
+                                        'Global_US and UK_Website_wework.com_Campaign LP_For All The Ways You Work Mid-Funnel Campaign_PNM-503',
+                                        'Global_Global_Landing page_wework.com__WeWork App Intro FAQ_All-613',
+                                        'Global_Global_Website_wework.com_Contact Us Page_Contact Us App Download_All-325',
+                                        'AA Onboarding',
+                                         'Global_Global_Website_wework.com_QR code_WeWork App LP_All',--added Jan 10th 2023
+                                         'INT_Multiple_Website_wework.com_On Demand Flash Sale _All', --added Jan 10th 2023
+                                         'Global_Global_Website_wework.com_waysyouwork_On Demand Response Message App Download_PNM-1014', --added Jan 10th 2023
+                                         'Global_Global_Website_wework.com_QR code_On Demand Response Message App Download QR code_All', --added Jan 10th 2023
+                                         'Global_Global_Website_weweork.com_waysyouwork_Coworking space Response Message App Download_All', --added Jan 10th 2023
+                                         'US_Website_wework.com_SMS_On Demand PDP Text Me Form_PNM', --added Jan 10th 2023
+                                          'Global_Global_Website_wework.com_On Demand product card_On Demand product card mobile app driver_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_Meeting Rooms product card_Meeting roooms product card mobile app driver_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_QR Code_Ways you Work - Meeting Rooms_PNM', --added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_QR Code_MF campaign - Why WeWork - On Demand_PNM', --added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_MF campaign_On Demand Response Message App Downloadd_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_waysyouwork_Meeting Rooms Response Message App Download_PNM', -- added Mar 29th 2023
+                                        'Global_Global_Website_wework.com_QR Code_Ways you Work - On Demand_PNM', --added Mar 29th 2023
+                                        'Global_Global_Website_wework.com_On Demand product card_On Demand product card mobile app driver_PNM', --added Mar 29th 2023
+                                        'USC_Global_Website_wework.com_Building page_Coworking Access response message_PNM',--added Mar 29th 2023
+                                        'Global_Global_Website_wework.com_Contact Us Page - Response Message (Other, Workspace)_Contact Us Page Response Message App Download_All-325', --added Mar 29th 2023
+                                        'INT_UK_Project Swift Landing Page_NA')
+                            or Campaign Ilike ('%land%')
+                        then 'Website'
+                    when
+                        CAMPAIGN in (   'Global_One App Migration_Email',
+                                        'Global_Global_Email_Native Email Footer App Link _All-511',
+                                        'Global_Global_Email_Email_NA_AA Onboading App Only_Member',
+                                        'Email_USC_Inbound SalesLoft_T4',
+                                        'Global_Global_Email_Email_NA_AA Onboarding OD_Churned Member',
+                                        'Global_Global_Email_Gated WiFi Try On Demand_PNM-718',
+                                        'Global_Global_Email_Email_NA_PO Onboarding App_Member',
+                                        'Global_Global_Email_Email_NA_AA Onboarding Desks_Member',
+                                        'USC_US_Partnerships_The Li.st_Email_On Demand _Member',
+                                        'Global_Global_Email_Email_NA_OD Nurture_Member',
+                                        'USC_Canada_Email_Email_Touch1_OD Montreal Launch_PNM',
+                                        'INT_Sweden_Email_Email_Expansion _OD Sweden Launch_PNM',
+                                        'Global_Global_Email_Email_NA_PO Onboarding Support_Member',
+                                        'INT_UKI_Email_Email_UKI email_OD Workwithperks email_PNM',
+                                        'Global_Global_Email_On Demand Lead Nurture T2A_PNM-829',
+                                        'INT_France_Email_Email_Expansion _OD France Launch_PNM',
+                                        'INT_Poland_Email_Email_Expansion _OD Poland Launch_PNM',
+                                        'INT_Netherlands_Email_Email_Expansion _OD Netherlands Launch_PNM',
+                                        'INT_Germany_Email_Email_Expansion _OD Germany Launch_PNM',
+                                        'INT_UKI_Email_Email_Email_Give Get Test OD UKI_PNM',
+                                        'INT_Spain_Email_Email_Expansion _OD Spain Launch_PNM',
+                                        'INT_Czech Republic_Email_Email_Expansion _OD CZ Launch_PNM',
+                                        'INT_Belgium_Email_Email_Expansion _OD Belgium Launch_PNM',
+                                        'Global_Multiple_Email_Mobile Access Pilot _Member-630',
+                                        'INT_Multiple_Email_Man City_Email_Man City Solas email _PNM',
+                                        'Global_Global_Email_Dedicated Space October_All-1018',--added on Jan 10th 2023
+                                      'Global_US and UK_Email_Email_Email_On Demand Dormant Reactivation V2_Member-1013', --added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T1_PNM-1122', --added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1214',--added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T1_PNM-1206',--added Jan 10th 2023
+                                      'NT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1122', --added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1122',--added Jan 10th 2023
+                                      'USC_Canada_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1222',--added Jan 10th 2023
+                                      'Global_Global_Email_Gated Wifi Relaunch On Demand_PNM-914', --added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1222',--added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1122',--added Jan10th 2023
+                                      'Global_Global_Email_On Demand Sign Up Journey_PNM-711',--added Jan 10th 2023
+                                      'USC_Canada_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1214',--added Jan 10th 2023)
+                                      'Global_US and UK_Email_Apple Search Ads_Email_Friends_Family - OD Member _Member', -- added Mar 29th 2023
+                                      'Global_Global_Email_Email_Email_Building Page Response Email - Coworking Access Interest_PNM') -- added Mar 29th 2023
+                        then 'Email'
+                    when
+                        Campaign in (   'Uber 2.0 On Demand',
+                                        'PDP On Demand',
+                                        'Global_Global_Social_Instagram Organic_OD_Flash_Boom_Instagram_All', --added Jan 10th 2023, Bluestone Lane
+                                        'Global_Global_Social_Instagram Organic_OD_Flash_Launch_instagram_All',--added Jan 10th 2023, Bluestone Lane
+                                        'Global_Global_Social_IG Stories Oragnic_OD_flash_Story_Instagram Stories_All')--added Jan 10th 2023, Bluestone Lane)
+                        then 'Partnerships'
+                    else 'Other'
+                end as source_consolidated
+            , null as RAW_CAMPAIGN
+            , null as AF_AD
+            , null as CREATION_DATE
+            , null as MARKETING_VS_PARTNERSHIPS
+            , 0 as new_accounts
+            , 'Revenue and Bookings' as source_table
+        from memex.DW_MEMEX.RPT_ONEAPP_BOOKINGS_FACT r
+        left join  tax t
+            on r.BOOKING_UUID = t.BOOKING_UUID
+        join FIVETRAN.SPACEMAN_PUBLIC.USERS u
+            on r.CUSTOMER_UUID = u.UUID
+        left join paid_source_users p
+            on r.CUSTOMER_UUID = p.user_uuid
+        left join user_first_market um
+            on um.user_uuid = r.CUSTOMER_UUID
+        left join last_month_pql pql
+            on
+                pql.USER_UUID = r.CUSTOMER_UUID
+                and pql.month = dateadd('month',-1,date_trunc('month',r.START_TIME_LOCAL::Date))
+        left join CENTRAL.CDM.LOCATIONS l
+            on r.LOCATION_UUID = l.UUID
+        join budget_rates br
+            on l.DEFAULT_CURRENCY = br.SOURCE_CURRENCY
+        left join media_mapping
+            on p.MEDIA_SOURCE = media_mapping.APPSFLYER_MEDIA_SOURCE
+        left join  mapping
+            on
+                p.CAMPAIGN = mapping.CAMPAIGN_NAME
+                and p.MEDIA_SOURCE= mapping.APPSFLYER_MEDIA_SOURCE
+        where
+            IS_CANCELLED_FLAG = 0
+            and r.ON_DEMAND_USER_FLAG
+),
+
+    new_accounts as (
+        select distinct
+            null as _RUN_AT
+            , null as booking_uuid
+            , null as location_uuid
+            , null as location_name
+            , null as city
+            , null as market
+            , region.REGION
+            , region.COUNTRY
+            , u.country_code
+            , null as reservable_uuid
+            , null as reservable_type
+            , 0 as capacity
+            , null as customer_uuid
+            , platform
+            , null as CANCELLED_AT_UTC
+            , null as CANCELLED_AT_LOCAL
+            , null as IS_CANCELLED_FLAG
+            , null as ON_DEMAND_USER_FLAG
+            , null as SPACESTATION_BOOKING_FLAG
+            , null as QOF_BOOKING_FLAG
+            , null as TS_UTC
+            , null as START_TIME_UTC
+            , null as FINISH_TIME_UTC
+            , null as LOCAL_TIME_ZONE
+            , null as TS_LOCAL
+            , null as START_TIME_LOCAL
+            , null as FINISH_TIME_LOCAL
+            , null as RESERVATION_LEAD_TIME_IN_HRS
+            , null as LENGTH_OF_BOOKING_IN_SECONDS
+            , null as LENGTH_OF_BOOKING_IN_HRS
+            , null as USER_BOOKING_SEQUENCE_NUMBER
+            , null as STRIPE_PAYMENT_INTENT_STATUS
+            , 0 as ORDER_AMOUNT
+            , 0 as CREDITS
+            , 0 as TO_USD_EXCHANGE_RATE
+            , 0 as ORDER_AMOUNT_USD
+            , null as PROMO_CODE
+            , null as PROMO_DISCOUNT
+            , null as LAUNCH_DATE_ON_DEMAND
+            , null as IS_ACTIVE_ON_DEMAND_LOC
+            , null as CLOSE_DATE_ON_DEMAND
+            , null as BUSINESS_DAYS_SINCE_OPEN_FOR_ON_DEMAND
+            , CREATION_DATE as key_ts
+            , case
+                        when region.REGION ilike 'us & canada' then 'United States'
+                        else l.territory
+                    end as territory
+            , region as REGION_FINAL
+            , null as PQL_STATUS_LAST_MONTH
+            , null as USER_MARKET
+            , null as USER_COUNTRY
+            , null as USER_REGION
+            , 0 as REV_EXL_TAX
+            , null as NAME
+            , null as EMAIL
+            , null as GO_LIVE_DATE
+            , null as BOOKING_NUM
+            , null as PAID_VS_ORGANIC
+            , case
+                    when INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, u.media_source)) in ('Google Uac', 'Apple Search Ads', 'Facebook Ads') then 'Paid Media'
+                    when u.MEDIA_SOURCE = 'organic' then 'Direct to App'
+                    else nvl(mapping.CHANNEL_CLEAN_, u.campaign)
+                end as campaign
+            , INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, u.media_source)) as media_source
+            , case
+                    when nvl(mapping.CHANNEL_CLEAN_, u.campaign) in ('Paid Media', 'Email', 'Website', 'Global_Global_Cyber Monday Promo', 'Partnerships', 'Organic') then  nvl(mapping.CHANNEL_CLEAN_, u.campaign)
+                    when nvl(mapping.CHANNEL_CLEAN_, u.campaign) ilike ('%influencer%') then  'Influencer'
+                    when INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, u.media_source)) = 'Community Team' then 'Community Selling'
+                    when INITCAP(coalesce(mapping.PARTNER_OR_PLATFORM, media_mapping.PARTNER_OR_PLATFORM, u.media_source)) in ('Google Uac', 'Apple Search Ads', 'Facebook Ads') then 'Paid Media'
+                    when MEDIA_SOURCE = 'organic' then 'Direct to App'
+                    when CAMPAIGN in(  'Global_Global_Website_wework.com_On Demand PDP _PNM-613',
+                                       'INT_US and UK_Landing page_wework.com_Paid Search Test_Paid Search Workspace Sign Up _PNM-330',
+                                       'Global_One App Migration_FAQ',
+                                       'Global_Global_Landing page_wework.com_Meeting Rooms PDP_PNM-613',
+                                       'Global_Global_Member Web QR Code_OD',
+                                       'Global_Global_Website_QR Code_On Demand PDP _PNM-720',
+                                       'landing page',
+                                       'Global_Global_Landing page_wework.com__Zendesk Flex Office Program_PNM-613',
+                                       'Global_Global_Website_wework.com__All Access PDP get started mod_PNM-616',
+                                       'Global_Global_Landing page_wework.com_On Demand Availability Location Reference_All-613',
+                                       'Global_Global_Landing page_wework.com__All Access FAQ_All-613',
+                                       'Global_Global_Landing page_wework.com__Friends n Family Offer 2022_PNM-812',
+                                       'Global_Global_Website_wework.com_Contact Us Page_Contact Us Page App Download_All-426',
+                                       'Global_Global_Website_wework.com_Contact Us Page - Response Message (Other, Workspace)_Contact Us Page Response Message App Download_All-325',
+                                       'Global_US and UK_Website_wework.com_Campaign LP_For All The Ways You Work Mid-Funnel Campaign_PNM-503',
+                                       'Global_Global_Landing page_wework.com__WeWork App Intro FAQ_All-613',
+                                       'Global_Global_Website_wework.com_Contact Us Page_Contact Us App Download_All-325',
+                                       'AA Onboarding',
+                                         'Global_Global_Website_wework.com_QR code_WeWork App LP_All',--added Jan 10th 2023
+                                         'INT_Multiple_Website_wework.com_On Demand Flash Sale _All', --added Jan 10th 2023
+                                         'Global_Global_Website_wework.com_waysyouwork_On Demand Response Message App Download_PNM-1014', --added Jan 10th 2023
+                                         'Global_Global_Website_wework.com_QR code_On Demand Response Message App Download QR code_All', --added Jan 10th 2023
+                                         'Global_Global_Website_weweork.com_waysyouwork_Coworking space Response Message App Download_All', --added Jan 10th 2023
+                                         'US_Website_wework.com_SMS_On Demand PDP Text Me Form_PNM', --added Jan 10th 2023
+                                         'Global_Global_Website_wework.com_On Demand product card_On Demand product card mobile app driver_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_Meeting Rooms product card_Meeting roooms product card mobile app driver_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_QR Code_Ways you Work - Meeting Rooms_PNM', --added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_QR Code_MF campaign - Why WeWork - On Demand_PNM', --added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_MF campaign_On Demand Response Message App Downloadd_PNM', -- added Mar 29th 2023
+                                         'Global_Global_Website_wework.com_waysyouwork_Meeting Rooms Response Message App Download_PNM', -- added Mar 29th 2023
+                                        'Global_Global_Website_wework.com_QR Code_Ways you Work - On Demand_PNM', --added Mar 29th 2023
+                                        'Global_Global_Website_wework.com_On Demand product card_On Demand product card mobile app driver_PNM', --added Mar 29th 2023
+                                        'USC_Global_Website_wework.com_Building page_Coworking Access response message_PNM',--added Mar 29th 2023
+                                     'Global_Global_Website_wework.com_Contact Us Page - Response Message (Other, Workspace)_Contact Us Page Response Message App Download_All-325', --added Mar 29th 2023
+                                       'INT_UK_Project Swift Landing Page_NA') or Campaign Ilike ('%land%') then 'Website'
+                    when CAMPAIGN in ( 'Global_One App Migration_Email',
+                                      'Global_Global_Email_Native Email Footer App Link _All-511',
+                                      'Global_Global_Email_Email_NA_AA Onboading App Only_Member',
+                                      'Email_USC_Inbound SalesLoft_T4',
+                                      'Global_Global_Email_Email_NA_AA Onboarding OD_Churned Member',
+                                      'Global_Global_Email_Gated WiFi Try On Demand_PNM-718',
+                                      'Global_Global_Email_Email_NA_PO Onboarding App_Member',
+                                      'Global_Global_Email_Email_NA_AA Onboarding Desks_Member',
+                                      'USC_US_Partnerships_The Li.st_Email_On Demand _Member',
+                                      'Global_Global_Email_Email_NA_OD Nurture_Member',
+                                      'USC_Canada_Email_Email_Touch1_OD Montreal Launch_PNM',
+                                      'INT_Sweden_Email_Email_Expansion _OD Sweden Launch_PNM',
+                                      'Global_Global_Email_Email_NA_PO Onboarding Support_Member',
+                                      'INT_UKI_Email_Email_UKI email_OD Workwithperks email_PNM',
+                                      'Global_Global_Email_On Demand Lead Nurture T2A_PNM-829',
+                                     'INT_France_Email_Email_Expansion _OD France Launch_PNM',
+                                      'INT_Poland_Email_Email_Expansion _OD Poland Launch_PNM',
+                                      'INT_Netherlands_Email_Email_Expansion _OD Netherlands Launch_PNM',
+                                       'INT_Germany_Email_Email_Expansion _OD Germany Launch_PNM',
+                                      'INT_UKI_Email_Email_Email_Give Get Test OD UKI_PNM',
+                                      'INT_Spain_Email_Email_Expansion _OD Spain Launch_PNM',
+                                      'INT_Czech Republic_Email_Email_Expansion _OD CZ Launch_PNM',
+                                      'INT_Belgium_Email_Email_Expansion _OD Belgium Launch_PNM',
+                                      'Global_Multiple_Email_Mobile Access Pilot _Member-630',
+                                      'INT_Multiple_Email_Man City_Email_Man City Solas email _PNM',
+                                      'Global_Global_Email_Dedicated Space October_All-1018',--added on Jan 10th 2023
+                                      'Global_US and UK_Email_Email_Email_On Demand Dormant Reactivation V2_Member-1013', --added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T1_PNM-1122', --added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1214',--added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T1_PNM-1206',--added Jan 10th 2023
+                                      'NT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1122', --added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1122',--added Jan 10th 2023
+                                      'USC_Canada_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1222',--added Jan 10th 2023
+                                      'Global_Global_Email_Gated Wifi Relaunch On Demand_PNM-914', --added Jan 10th 2023
+                                      'USC_US_Email_wework.com_Email_On Demand Flash Sale_T3_PNM-1222',--added Jan 10th 2023
+                                      'INT_Multiple_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1122',--added Jan10th 2023
+                                      'Global_Global_Email_On Demand Sign Up Journey_PNM-711',--added Jan 10th 2023
+                                      'USC_Canada_Email_wework.com_Email_On Demand Flash Sale_T2_PNM-1214',--added Jan 10th 2023)
+                                       'Global_US and UK_Email_Apple Search Ads_Email_Friends_Family - OD Member _Member', -- added Mar 29th 2023
+                                       'Global_Global_Email_Email_Email_Building Page Response Email - Coworking Access Interest_PNM') -- added Mar 29th 2023
+                                      then 'Email'
+                        When Campaign in (
+                                       'Uber 2.0 On Demand',
+                                       'PDP On Demand',
+                                       'Global_Global_Social_Instagram Organic_OD_Flash_Boom_Instagram_All', --added Jan 10th 2023, Bluestone Lane
+                                        'Global_Global_Social_Instagram Organic_OD_Flash_Launch_instagram_All',--added Jan 10th 2023, Bluestone Lane
+                                        'Global_Global_Social_IG Stories Oragnic_OD_flash_Story_Instagram Stories_All'--added Jan 10th 2023, Bluestone Lane
+                                    ) then 'Partnerships'
+                        else 'Other'
+                    end as source_consolidated
+            , u.campaign as raw_campaign
+            , u.AF_AD
+            , u.creation_date
+            , mapping.MARKETING_VS_PARTNERSHIPS
+            , ct as new_accounts
+            , 'Accounts' as source_table
+        from users u
+        left join media_mapping
+            on  u.MEDIA_SOURCE = media_mapping.APPSFLYER_MEDIA_SOURCE
+        left join  mapping
+            on u.CAMPAIGN = mapping.CAMPAIGN_NAME
+            and u.MEDIA_SOURCE= mapping.APPSFLYER_MEDIA_SOURCE
+        left join region_mapping region
+            on u.COUNTRY_CODE = region.COUNTRY_CODE
+        left join (
+                    select distinct
+                        country
+                        , territory
+                    from central.cdm.LOCATIONS
+                    where
+                        region ilike any ('international', 'us & canada')
+                        and territory is not null)
+            l on region.country = l.country
+        where
+            territory is not null
+            and region is not null
+
+)
+
+select *
+from new_accounts
+where
+    region ilike any ('us & canada', 'international')
+    and date_trunc('week', key_ts) < dateadd('week',1, current_date())
+union
+
+select *
+from revenue_and_bookings
+where
+    region ilike any ('us & canada', 'international')
+    and date_trunc('week', key_ts) < dateadd('week',1, current_date())
+```
+
+
+</details>

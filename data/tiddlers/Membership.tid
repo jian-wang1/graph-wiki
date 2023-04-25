@@ -1,0 +1,13 @@
+created: 20230410150524452
+filter: 
+modified: 20230421174032477
+sprint: 
+task_priority: 
+title: Membership
+tmap.edges: {"13f5e3d2-4fbf-4f1c-a42e-75658078b1db":{"to":"c531c940-2f2f-4efc-886a-5167ae32dda5","type":"has a"}}
+tmap.id: a94c2307-ff4c-47a1-bb35-4c731dab86d3
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+pegasus, id:
+central.cdm_customer_history.user_membership

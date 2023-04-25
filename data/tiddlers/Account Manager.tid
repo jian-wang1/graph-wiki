@@ -1,0 +1,50 @@
+created: 20230419211432984
+filter: 
+modified: 20230419211501613
+sprint: 
+task_priority: 
+title: Account Manager
+tmap.edges: 
+tmap.id: d28dd82d-cd70-4951-9714-c4362254d744
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+account manager
+
+```
+select sf_account_id, parent_sf_account_id, account_name, account_manager_full_name, ultimate_parent_org_name, ultimate_parent_org_sf_account_id, sf_owner_id
+, t2.username, t3.l2_manager_name, t3.l2_manager_sales_role, t3.l3_manager_name, t3.l3_manager_sales_role, t3.l4_manager_name, t3.l4_manager_sales_role, t3.l5_manager_name, t3.l5_manager_sales_role
+--select *
+from growth.growthtech_dw.dim_sf_account t1
+left join growth.growthtech_dw.dim_sf_user t2
+on t1.sf_owner_id = t2.sf_user_id
+left join growth.growthtech_dw.dim_sf_sales_user_attribute t3
+on t2.sf_user_id = t3.sf_user_id
+where sf_account_id in (
+--0014Q00002ZmulmQAB
+select ultimate_parent_org_sf_account_id
+from growth.growthtech_dw.dim_sf_account
+where account_name= 'Amazon Web Services'
+)
+
+```
+
+
+or sf_account_id in ('0014Q00002Zn06DQAR', '0014Q00002Zn90mQAB', '0014Q00002d7PDRQA2', '0012I00002PDSxoQAH', '0014Q00002Zn06DQAR')
+
+
+raw data
+
+
+
+```
+select id, account_manager_lookup_c, parent_org_id_c, owner_id, parent_id, parent_org_name_c, parent_uuid_c, created_date
+from fivetran.salesforce_v2.account
+where name = 'Amazon Web Services'
+      or left(id, 15) in ('0014Q00002Zn06D', '0012I00002PDSxo', '0014Q00002Zn90m')
+
+select id, account_manager_lookup_c, parent_org_id_c, owner_id, parent_id, parent_org_name_c, created_date
+from fivetran.salesforce_orgc.account
+where name = 'Amazon Web Services'
+```
+

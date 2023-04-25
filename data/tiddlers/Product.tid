@@ -1,0 +1,10 @@
+created: 20230410150541349
+filter: 
+modified: 20230410150541349
+sprint: 
+task_priority: 
+title: Product
+tmap.edges: {"51885a9e-33bf-4487-a814-8677a1f89268":{"to":"315354f9-24a1-4a59-a445-fc28c3050c2d","type":"consist of"},"7d92d6b1-a3e7-43af-92fd-3bd574e6cf81":{"to":"260b9822-a300-455b-a651-15d78a6dd787","type":"consist of"},"b04dbede-c1ca-4b40-8fd8-8eb50ec6b285":{"to":"0d92b6b4-9af7-4290-9c44-c86641159b8a","type":"consist of"}}
+tmap.id: 56ab3745-283c-4e98-9080-5f096df6b20c
+tmap.style: 
+type: text/vnd.tiddlywiki

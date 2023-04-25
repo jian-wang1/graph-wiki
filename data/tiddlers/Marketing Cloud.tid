@@ -1,12 +1,15 @@
 created: 20230322201256613
-modified: 20230324171508345
-tags: [[source system]]
+filter: 
+modified: 20230331152827207
+sprint: 
+task_priority: 
 title: Marketing Cloud
 tmap.edges: {"432c6e94-fa41-4e84-9fae-cc8fc4ea5967":{"to":"5d5ac27d-04fc-44f3-92c4-401018fa98f2","type":"equivalent"},"d7297a1a-1ecf-4e65-a17e-ba8e8975dd7c":{"to":"b6581344-e353-485e-a474-470b2c7de413","type":"compose of"},"d0df6861-8f47-4ab4-bad7-068c6f23677f":{"to":"4550cce6-592d-43c9-bdfb-684ad1fec492","type":"send"},"e8214de4-5e15-4d2b-9012-48882ba8bfe1":{"to":"d5197f65-9404-4ddf-8c74-d05754b4c124","type":"send"}}
 tmap.id: 450be515-f7ff-4a3b-b5fd-f693a671e86a
+tmap.style: 
 type: text/vnd.tiddlywiki
 
-[img[image.png]]
+
 
 Event 
 

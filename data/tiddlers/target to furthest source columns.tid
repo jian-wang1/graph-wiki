@@ -1,0 +1,23 @@
+created: 20230331193552846
+filter: 
+modified: 20230331211027856
+sprint: 
+task_priority: 
+title: target to furthest source columns
+tmap.edges: 
+tmap.id: 4ce76b69-f2a4-435c-9856-dc6c38c3d43d
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+    
+
+```
+select distinct source_database, source_schema, source_table, source_column, target_column
+from central__dev.dw.q2c_data_furthest_upstream_column_mapping
+where 1>0 
+     --and dag_id = 'customer_data_model_dag'
+     and source_column_impact_type = 'column impact'
+     and target_column ilike '%location%'
+     and target_table = 'user_membership'
+     order by 1,2,
+```

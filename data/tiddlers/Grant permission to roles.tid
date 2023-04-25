@@ -1,0 +1,25 @@
+created: 20230407172601773
+filter: 
+modified: 20230407173743793
+sprint: 
+task_priority: 
+title: Grant permission to roles
+tmap.edges: {"538a1eb2-4adb-4e9f-b048-8199c3a5c46b":{"to":"28ea0f1c-3a39-4aeb-9145-33d24bb8f1ca","type":"next step"}}
+tmap.id: 23c54533-f57a-447c-a98b-dcf7ade1109b
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+-- grant ownership to the schema owner
+
+```
+GRANT OWNERSHIP ON FILE FORMAT vaynermedia TO ROLE <role name>;
+GRANT OWNERSHIP ON STAGE vaynermedia TO ROLE <role name>;
+
+```
+
+-- grant usage to writer role
+
+```
+GRANT USAGE ON FILE FORMAT vaynermedia TO ROLE <writer role name>;
+GRANT USAGE ON STAGE vaynermedia TO ROLE <writer role name>;
+```

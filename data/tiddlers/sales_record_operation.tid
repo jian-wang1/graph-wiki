@@ -1,9 +1,12 @@
 created: 20230316222028077
+filter: 
 modified: 20230316223001308
-tags: [[model field]]
+sprint: 
+task_priority: 
 title: sales_record_operation
 tmap.edges: {"0df382c1-1897-4569-ada8-07a5e31637fb":{"to":"3a70e8d8-28d6-49b6-9834-750a60aa3e5f","type":"is part of"}}
 tmap.id: 2bd5d2b7-326b-4a85-88fc-dc371548b069
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

@@ -1,0 +1,15 @@
+created: 20230406173947110
+filter: 
+modified: 20230406174024729
+sprint: 
+task_priority: 
+title: sales dag frequency increase
+tmap.edges: 
+tmap.id: 3b34edad-e54a-4841-897e-f8adfcda56ae
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+1. increase the data source frequency from 3 hour to 1 hour
+   https://fivetran.com/dashboard/connectors/anomalous_transplantation/status?groupId=marquis_virtue&service=mysql_rds
+
+2. 

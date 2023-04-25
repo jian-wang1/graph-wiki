@@ -1,0 +1,12 @@
+created: 20230410151718451
+filter: 
+modified: 20230421173958301
+sprint: 
+task_priority: 
+title: Account
+tmap.edges: {"56e72b5b-7a4b-4fc1-88d7-02bfe28da910":{"to":"a94c2307-ff4c-47a1-bb35-4c731dab86d3","type":"consist of"},"b48308de-38ad-46ee-a970-8cc1cdaee93f":{"to":"56ab3745-283c-4e98-9080-5f096df6b20c","type":"purchase 1 or more"}}
+tmap.id: c531c940-2f2f-4efc-886a-5167ae32dda5
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+central.cdm.accounts

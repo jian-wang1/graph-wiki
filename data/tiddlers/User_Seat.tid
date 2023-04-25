@@ -1,0 +1,23 @@
+created: 20230403181422002
+filter: 
+modified: 20230403181439059
+sprint: 
+task_priority: 
+title: User_Seat
+tmap.edges: 
+tmap.id: 2fd77dd8-e60f-471f-baae-97ab72651ac5
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+User Seat is the source of truth for user's membership in SpaceStation. 
+
+1. seat_status = active means user currently belongs to company. 
+    seat_status = inactive means the user does NOT belong to company, but did in the past
+
+
+2. compan_status = active/inactivate means if company has active Spaceman::Reservation or not.
+
+
+3. user_status = active/inactive means if user belongs to an active company or not (doesn’t say if user has a membership assigned or not..)
+
+A user could be user_status = active, but still have no membership and thus not be able to do anything (cannot log into members-web). Or user could be user_status=inactive, but still belong to the company and still be able to log into account-central to do admin tasks, etc

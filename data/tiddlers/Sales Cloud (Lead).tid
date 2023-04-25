@@ -1,9 +1,12 @@
 created: 20230324164125647
-modified: 20230324171845720
-tags: [[source system]]
+filter: 
+modified: 20230331143000859
+sprint: 
+task_priority: 
 title: Sales Cloud (Lead)
 tmap.edges: {"e1808d29-0b0c-4b3a-a2a1-151d993bcfe1":{"to":"f1c59131-5805-4666-b45b-fe45898a0b54","type":"equivalent"},"2650e548-2065-44c4-ab4f-4c17d529813e":{"to":"b6581344-e353-485e-a474-470b2c7de413","type":"compose of"},"3ac3f0e5-bcea-4651-96dc-5b3b0b292f27":{"to":"af030c0c-6623-45e2-877f-c40bc20bacd7","type":"batch synchronize"},"b4af2e25-ebf6-40a4-a2e7-5b0262176ab1":{"to":"e161a56d-3d76-4461-8e4f-9578b4c230d4","type":"consolidate"}}
 tmap.id: e161a56d-3d76-4461-8e4f-9578b4c230d4
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 [img[Screen Shot 2023-03-22 at 4.37.42 PM.png]]

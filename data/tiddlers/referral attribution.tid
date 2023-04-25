@@ -1,0 +1,85 @@
+created: 20230329205307931
+filter: 
+modified: 20230330201204871
+sprint: 
+task_priority: 
+title: referral attribution
+tmap.edges: {"4bdc5d89-5531-4864-84ed-4fcd048b9f96":{"to":"15d9a67c-2e77-400f-b132-23ef1fe6cdf3","type":"is ansestor of"}}
+tmap.id: fa106370-4059-4b93-8804-b0d5885171a6
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+[img[referrals attrib.png]]
+
+Integrity Check
+
+<details>
+
+```
+with match as ( 
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_referral t1
+inner join  growth__dev.growthtech_dw.salesfunnel_attribution_referral_before t2
+  on ifnull(t1.touch_id,'') = ifnull(t2.touch_id, '')
+     and ifnull(t1.sf_opportunity_id, '') = ifnull(t2.sf_opportunity_id, '')
+     and coalesce(t1.journey_id, t1.derived_journey_id, '') = coalesce(t2.journey_id, t2.derived_journey_id, '')
+     --and t1.model = t2.model
+),
+prod as (
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_referral_before
+),
+dev as (
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_referral
+)
+select *
+from (
+  select 'prod vs intersection' as check_point,
+         prod.total_count as value_1,
+         match.total_count as value_2,
+         prod.total_count - match.total_count as diff 
+    from prod, match
+  union all
+    select 'dev vs intersection' as check_point,
+         dev.total_count as value_1,
+         match.total_count as value_2,
+         dev.total_count - match.total_count as diff 
+    from dev, match
+   union all
+    select 'prod vs dev' as check_point,
+         prod.total_count as value_1,
+         dev.total_count as value_2,
+         dev.total_count - prod.total_count as diff 
+    from dev, prod
+)
+where diff <> 0
+```
+</details>
+
+Spot Check
+
+<details>
+
+```
+with match as ( 
+select t1.* 
+from  growth__dev.growthtech_dw.salesfunnel_attribution_referral t1
+inner join  growth.growthtech_dw.salesfunnel_attribution_referral t2
+  on ifnull(t1.touch_id,'') = ifnull(t2.touch_id, '')
+     and ifnull(t1.sf_opportunity_id, '') = ifnull(t2.sf_opportunity_id, '')
+     and coalesce(t1.journey_id, t1.derived_journey_id, '') = coalesce(t2.journey_id, t2.derived_journey_id, '')
+     --and t1.model = t2.model
+),
+dev as (
+select *
+from growth__dev.growthtech_dw.salesfunnel_attribution_referral
+--where sf_opportunity_id='0062I00000zuDInQAM'
+)
+
+select * from dev 
+minus
+select * from match
+```
+
+</details>

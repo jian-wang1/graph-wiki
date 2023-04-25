@@ -1,10 +1,12 @@
 created: 20230320165723833
+filter: 
 modified: 20230320194031418
 sprint: 3/9 - 3/21
-tags: de-task
 task_priority: 1
 title: marketing - vayner media setup
+tmap.edges: 
 tmap.id: d589472d-2ff9-4314-b175-2a0d635a6f98
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 https://jira.weworkers.io/browse/DATAE-11730

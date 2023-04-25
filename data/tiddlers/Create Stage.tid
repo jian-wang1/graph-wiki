@@ -1,0 +1,47 @@
+created: 20230407172521612
+filter: 
+modified: 20230407180502247
+sprint: 
+task_priority: 
+title: Create Stage
+tmap.edges: {"7ad669e9-fa07-4999-bf15-e074c705d82d":{"to":"23c54533-f57a-447c-a98b-dcf7ade1109b","type":"next step"}}
+tmap.id: 243c5843-5eca-4d2f-a0d5-b9c6c190e78e
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+Format
+
+```
+CREATE STAGE <stage_name>
+    [URL = '<stage_url>' | PATH = '<stage_path>']
+    [CREDENTIALS = (AWS_KEY_ID = '<aws_access_key>', AWS_SECRET_KEY = '<aws_secret_key>')]
+    [FILE_FORMAT = (<file_format_name> | TYPE = <file_format_type>, <file_format_options>)]
+    [COPY_OPTIONS = (<copy_options>)]
+    [STORAGE_INTEGRATION = <storage_integration_name>]
+```
+
+Example:
+
+```
+CREATE STAGE vaynermedia_1
+    URL = 's3://...'
+    CREDENTIALS = ( AWS_KEY_ID = '' AWS_SECRET_KEY = '' )
+    FILE_FORMAT = ( FORMAT_NAME='vaynermedia')
+```
+
+list all stages
+
+
+```
+show stages in database <dbname>;
+
+```
+
+list permissions on the stage
+
+
+```
+SHOW GRANTS ON STAGE <stage_name>;
+
+```

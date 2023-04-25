@@ -1,0 +1,21 @@
+created: 20230407172511355
+filter: 
+modified: 20230407173314062
+sprint: 
+task_priority: 
+title: Create File Format
+tmap.edges: {"b381353e-b451-4337-bed4-2333eadb6252":{"to":"243c5843-5eca-4d2f-a0d5-b9c6c190e78e","type":"next step"}}
+tmap.id: 66b064a0-9f15-4c9a-8f06-6565290473b4
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+```
+create file format vaynermedia
+    type = csv
+    compression = none
+    field_delimiter = ','
+    record_delimiter = '\n'
+    skip_header = 0
+    empty_field_as_null = true;
+```

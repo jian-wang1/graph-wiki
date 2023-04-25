@@ -1,9 +1,12 @@
 created: 20230307201035538
+filter: 
 modified: 20230315182217926
-tags: [[source system]]
+sprint: 
+task_priority: 
 title: spaceman
 tmap.edges: {"37946493-d13c-492a-bc2b-e59b75483487":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"relate"}}
 tmap.id: e9b041b8-0cc0-4766-91bb-dd9a65329e34
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 source of truth for the following fields:

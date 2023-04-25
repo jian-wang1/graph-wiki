@@ -1,9 +1,12 @@
 created: 20230315210154184
-modified: 20230315214512836
-tags: [[model field]]
+filter: 
+modified: 20230328185919344
+sprint: 
+task_priority: 
 title: prdsb.net_term_months
 tmap.edges: {"8537baba-1eb1-4a9e-b585-9a607df59b79":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"58a993bf-0f87-4f47-a2e4-ec5c8951509c":{"to":"459ecca7-0806-461f-bce3-29d24ef1f2b8","type":"sum"}}
 tmap.id: b3cfe801-4e91-4166-a149-5186d8d9aaf8
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 !! Code Definition

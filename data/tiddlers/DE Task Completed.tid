@@ -1,7 +1,12 @@
 created: 20230320144219131
+filter: 
 modified: 20230320173134213
+sprint: 
+task_priority: 
 title: DE Task Completed
+tmap.edges: 
 tmap.id: 0a7fc20f-11ec-4189-8a07-1a2f1e80c96d
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 <$list filter="[tag[de-task]!has[draft.of]tag[done]sort[created]]">

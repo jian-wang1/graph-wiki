@@ -1,0 +1,10 @@
+created: 20230407172800404
+filter: 
+modified: 20230407172800404
+sprint: 
+task_priority: 
+title: Automate in airflow
+tmap.edges: {"bcacb728-3a51-4764-bffa-2fc1d391ca83":{"to":"2f38b3cb-0ff6-441f-9f5c-5c792ba566db","type":"next step"}}
+tmap.id: 5c045b0e-ed17-4db3-bf05-8e8cd2d2ecfd
+tmap.style: 
+type: text/vnd.tiddlywiki

@@ -1,6 +1,10 @@
 created: 20230324185307394
+filter: 
 modified: 20230324185307394
+sprint: 
+task_priority: 
 title: User C
 tmap.edges: {"0ba81ced-22b8-488a-863e-f185b524e219":{"to":"4ed7e815-4d51-4ff9-8b2c-c7021a06832e","type":"open / click"}}
 tmap.id: d5197f65-9404-4ddf-8c74-d05754b4c124
+tmap.style: 
 type: text/vnd.tiddlywiki

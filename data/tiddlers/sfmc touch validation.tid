@@ -1,0 +1,42 @@
+created: 20230330145048284
+filter: 
+modified: 20230331133351532
+sprint: 
+task_priority: 
+title: sfmc touch validation
+tmap.edges: {"33f9c471-3251-4cda-bd5e-fc5f3765d79d":{"to":"52737de0-12a5-4beb-b446-320307fd0ebc","type":"is ansestor of"}}
+tmap.id: 5b787b8c-cc8d-4413-9a75-1df24a48396a
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+
+```
+with dev as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_sfmc
+where touch_ts<dateadd(day, -14, current_date()) 
+),
+prod as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth.growthtech_dw.salesfunnel_channeltouch_sfmc
+where touch_ts<dateadd(day, -14, current_date()) 
+)
+select *
+from ( 
+    select
+    'total count' as check_point,
+    prod.total_count as value_before ,
+    dev.total_count as value_after,
+    dev.total_count - prod.total_count as change_in_value
+    from prod, dev
+    union all
+    select
+    'touch count' as check_point,
+    prod.touch_count as value_before,
+    dev.touch_count as value_after,
+    dev.touch_count - prod.touch_count as change_in_value
+    from prod, dev
+    )
+where change_in_value <> 0
+```

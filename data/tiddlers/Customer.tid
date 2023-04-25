@@ -1,0 +1,14 @@
+created: 20230421171023192
+filter: 
+modified: 20230421173939872
+sprint: 
+task_priority: 
+title: Customer
+tmap.edges: {"aeb07296-1b76-48e5-9026-9c6707360eae":{"to":"c531c940-2f2f-4efc-886a-5167ae32dda5","type":"has 1 or more"},"b3f57cb0-d714-44fb-a6ea-74869c5cc056":{"to":"56ab3745-283c-4e98-9080-5f096df6b20c","type":"purchase 1 or more"},"57a896d2-0fdc-4744-962c-a568e7844563":{"to":"a94c2307-ff4c-47a1-bb35-4c731dab86d3","type":"has 1 or more"}}
+tmap.id: 095a6673-2f92-4009-973d-9491b102ac59
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+sot:
+
+central.cdm_customers.customer

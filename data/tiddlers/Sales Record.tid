@@ -1,9 +1,12 @@
 created: 20230307201035538
+filter: 
 modified: 20230315182049299
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: Sales Record
 tmap.edges: {"b7decf9f-56d8-4e80-9026-fd1cf5917255":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"generate"},"e4363d31-4ef8-46b0-904f-c3b658cc2653":{"to":"fd650f79-8c9a-4369-84da-c0412e5952be","type":"enhance"}}
 tmap.id: ebdd3214-eab9-4444-bbe8-8bd42cbe919f
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 !! Highly aggregated fields:

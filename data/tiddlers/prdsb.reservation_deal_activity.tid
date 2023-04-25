@@ -1,9 +1,12 @@
 created: 20230316213644277
+filter: 
 modified: 20230316223244249
-tags: [[model field]]
+sprint: 
+task_priority: 
 title: prdsb.reservation_deal_activity
 tmap.edges: {"83320c35-739c-4494-947b-994e62cfe404":{"to":"9fa4a8d0-ef35-4d7d-9d40-ccc042fa7650","type":"impact"}}
 tmap.id: 166397bd-d08e-469a-a199-e95bbf5060a4
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

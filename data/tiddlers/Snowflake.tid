@@ -1,7 +1,10 @@
 created: 20230324183125528
-modified: 20230324183218629
-tags: [[source system]]
+filter: 
+modified: 20230331160215212
+sprint: 
+task_priority: 
 title: Snowflake
 tmap.edges: {"dbc7b9e3-ec4c-4f0a-9ce0-bfb811c2eb7a":{"to":"01e1085f-ba00-4a34-8bd7-d4f00683ffdf","type":"share with"}}
 tmap.id: af030c0c-6623-45e2-877f-c40bc20bacd7
+tmap.style: 
 type: text/vnd.tiddlywiki

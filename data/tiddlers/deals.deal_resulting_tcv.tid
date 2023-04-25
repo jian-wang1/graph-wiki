@@ -1,9 +1,12 @@
 created: 20230315193509625
-modified: 20230315202614740
-tags: [[model field]]
+filter: 
+modified: 20230404175433342
+sprint: 
+task_priority: 
 title: deals.deal_resulting_tcv
 tmap.edges: {"137ad016-d1fc-4a81-a88a-ba4023b03a75":{"to":"595ba701-4621-41f1-b38b-30de4340805c","type":"is divisor of"}}
 tmap.id: 0a90a868-2cc1-40d0-ac9f-9cbf5d155434
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 !! Code Definition

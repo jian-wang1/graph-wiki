@@ -1,9 +1,12 @@
 created: 20230315193024913
-modified: 20230315193308990
-tags: [[model field]]
+filter: 
+modified: 20230404175356580
+sprint: 
+task_priority: 
 title: deals.prior_commitment_term_weighted_by_tcv
 tmap.edges: {"f6a48e49-f0f3-403a-a28a-1651ed6879ac":{"to":"21d7c72a-68ba-4f21-a31a-7362c6a87f87","type":"impact"}}
 tmap.id: ada31c82-6a65-4189-9a74-0be90d9a4ab0
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

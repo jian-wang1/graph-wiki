@@ -1,9 +1,12 @@
 created: 20230315195644226
+filter: 
 modified: 20230321211210673
-tags: [[model field]]
+sprint: 
+task_priority: 
 title: srb.committed_value_changed_local
 tmap.edges: {"31c46bc9-b628-42a8-8a38-fa1895217c2f":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"8597c932-f38f-4af8-9141-7552143baf29":{"to":"6636a5e4-f42f-410f-bc2f-499a5f1d198a","type":"sum"}}
 tmap.id: 0f4eca6a-1d07-4980-b13f-57b5b1ce6939
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

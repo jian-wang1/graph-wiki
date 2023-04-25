@@ -1,0 +1,20 @@
+created: 20230330193452994
+filter: 
+modified: 20230331182855243
+sprint: 
+task_priority: 
+title: account attribution
+tmap.edges: {"9227b726-58ee-449f-aca8-9ad766daade0":{"to":"95d84040-f702-4132-aed1-a19a5f04bf33","type":"is ansestor of"}}
+tmap.id: 9380e9b0-14f1-47ae-a52c-69d836430537
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+Due to timeout issue, we have no way to compare before and after only due to this change.
+
+before
+
+[img[attibution account table size.png]]
+
+after
+
+[img[account attribution after size.png]]

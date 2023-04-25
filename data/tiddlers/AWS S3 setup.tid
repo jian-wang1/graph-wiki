@@ -1,0 +1,64 @@
+created: 20230407172725944
+filter: 
+modified: 20230413151209599
+sprint: 
+task_priority: 
+title: AWS S3 setup
+tmap.edges: {"8b38f643-4c06-4c2f-b725-b996a4d79da0":{"to":"243c5843-5eca-4d2f-a0d5-b9c6c190e78e","type":"next step"}}
+tmap.id: 8936632b-b2de-481b-acf5-b6e696de4208
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+1. testing s3 bucket setup
+
+
+add credential and config to .aws folder
+set aws_profile to vendor_marketing_test
+
+
+
+2. list files
+
+
+```
+aws s3 ls s3://dataeng-vendor/marketing/
+
+```
+
+3. create a vayner_test folder for testing purpose
+
+
+```
+aws s3api put-object --bucket dataeng-vendor --key marketing/vayner_test
+
+```
+
+4. download to local and check
+
+
+```
+aws s3 cp s3://dataeng-vendor/marketing/vayner_test/ to_be_deleted/ --recursive
+
+```
+
+5. remove all the files under the folder
+
+
+```
+aws s3 rm s3://dataeng-vendor/marketing/vayner_test/ --recursive
+
+```
+
+6. delete the testing folder
+
+
+```
+aws s3 rm s3://dataeng-vendor/marketing/vayner_test
+
+```
+
+
+
+
+

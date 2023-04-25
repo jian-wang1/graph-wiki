@@ -1,0 +1,45 @@
+created: 20230407172701055
+filter: 
+modified: 20230413173910559
+sprint: 
+task_priority: 
+title: Snowflake to S3 share
+tmap.edges: {"50de0210-857c-46a3-88bd-17778eb29516":{"to":"5c045b0e-ed17-4db3-bf05-8e8cd2d2ecfd","type":"next step"}}
+tmap.id: 28ea0f1c-3a39-4aeb-9145-33d24bb8f1ca
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+copy file to stage
+
+
+```
+COPY INTO @database.schema.vaynermedia_test/mql_2023_04_13.csv
+FROM central__dev.dw.to_be_deleted
+FILE_FORMAT = ( FORMAT_NAME='database.schema.vaynermedia')
+ header = true,
+ single=True,
+ overwrite=True,
+ max_file_size=536870912
+```
+
+check file existence 
+
+via snowflake command
+ 
+
+```
+LIST @mystage;
+
+LIST @mystage LIKE '*.csv';
+```
+
+
+
+
+delete file
+
+
+```
+REMOVE @<stage_name>/<file_pattern>;
+
+```

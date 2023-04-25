@@ -1,10 +1,12 @@
 created: 20230320165257171
+filter: 
 modified: 20230322145024544
 sprint: 3/9 - 3/21
-tags: de-task
 task_priority: 0
 title: Sales - net weighted term issue
+tmap.edges: 
 tmap.id: 656713ae-ebfc-40f2-9499-f2c4b0b17812
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 https://jira.weworkers.io/browse/DATAE-11702

@@ -1,9 +1,12 @@
 created: 20230313212759186
-modified: 20230321152953667
-tags: [[model field]] [[issued field]]
+filter: 
+modified: 20230328173044760
+sprint: 
+task_priority: 
 title: deals.net_weighted_avg_commitment_term_by_desks
 tmap.edges: {"8e43975e-769a-482d-89ba-071b1bbc2778":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"is field of"}}
 tmap.id: 6b67bb41-6999-4c8a-9053-868c456b1bb3
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 !! Code Definition

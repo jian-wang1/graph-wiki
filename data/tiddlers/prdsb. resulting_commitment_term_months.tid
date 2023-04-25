@@ -1,9 +1,12 @@
 created: 20230315202041599
+filter: 
 modified: 20230315202041599
-tags: [[model field]]
+sprint: 
+task_priority: 
 title: prdsb. resulting_commitment_term_months
 tmap.edges: {"92c6ad0a-c701-4b00-b636-cb436b716c95":{"to":"a9d6749d-d9fe-4d5d-844e-510e8d2d2225","type":"is field of"},"e0581be4-8005-4e63-9ca2-7ea8d4b4344d":{"to":"595ba701-4621-41f1-b38b-30de4340805c","type":"is factor of"}}
 tmap.id: 501a3b49-bbf1-4fc7-9b25-89b9da2bbbbf
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 !! Code Definition

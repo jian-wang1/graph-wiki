@@ -1,0 +1,16 @@
+created: 20230329205327899
+filter: 
+modified: 20230330181656731
+sprint: 
+task_priority: 
+title: salesfunnel_channeltouch_all_with_sfcontact
+tmap.edges: {"4f398aa5-ddec-4978-8284-a8d61213ebf4":{"to":"fa106370-4059-4b93-8804-b0d5885171a6","type":"is ansestor of"},"b401a1df-ad59-4ec4-9af4-d26a4550bd3a":{"to":"1b665041-ca96-4ca9-913e-24de54236a6e","type":"is ansestor of"}}
+tmap.id: 8b5021c2-317b-41a2-8a21-2da34498c230
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+```
+create or replace table growth__dev.growthtech_dw.salesfunnel_channeltouch_all_with_sfcontact as
+select * from  growth.growthtech_dw.salesfunnel_channeltouch_all_with_sfcontact
+```

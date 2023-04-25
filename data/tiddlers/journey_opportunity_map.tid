@@ -1,7 +1,10 @@
 created: 20230314204750113
+filter: 
 modified: 20230315183247408
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: journey_opportunity_map
-tmap.edges: {}
+tmap.edges: {"d023c939-06ba-41c4-a89c-2d03624d5094":{"to":"a9dc7c1b-804e-42ee-9252-e65ee337315c","type":"aggregate"},"77bc0ee3-aa62-495c-8673-a687edc92201":{"to":"15d9a67c-2e77-400f-b132-23ef1fe6cdf3","type":"is ansestor of"}}
 tmap.id: 20845e59-2750-4283-b9d8-2b74bf1a7ee0
+tmap.style: 
 type: text/vnd.tiddlywiki

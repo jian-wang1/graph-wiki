@@ -1,7 +1,10 @@
 created: 20230324172102845
+filter: 
 modified: 20230324184701501
-tags: user
+sprint: 
+task_priority: 
 title: User B
 tmap.edges: {"c333a697-a1e3-472a-bc9d-fc0e13194768":{"to":"4ed7e815-4d51-4ff9-8b2c-c7021a06832e","type":"open / click"}}
 tmap.id: f22208ff-ad9f-4f7f-b580-bcda28ba34d9
+tmap.style: 
 type: text/vnd.tiddlywiki

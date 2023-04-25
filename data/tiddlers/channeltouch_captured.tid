@@ -1,0 +1,62 @@
+created: 20230330193024596
+filter: 
+modified: 20230330220014982
+sprint: 
+task_priority: 
+title: channeltouch_captured
+tmap.edges: {"a7875501-8e6c-4986-8812-59f7d3305823":{"to":"70904f17-ccfd-4e87-951f-02973bd24bd2","type":"analyze"}}
+tmap.id: a586bf86-8a3c-4d89-8e58-ca10e092c19e
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+[img[channeltouch captured.png]]
+
+<details>
+
+```
+with match as ( 
+select count(distinct  t1.touch_id, t1.key_id, t1.sf_journey_id, t1.sf_opportunity_id, t1.model) as total_count
+from  (select distinct touch_id, key_id, sf_journey_id, sf_opportunity_id, model from growth__dev.growthtech_dw.salesfunnel_channeltouch_captured) t1
+inner join  (select distinct touch_id, key_id, sf_journey_id, sf_opportunity_id, model from growth__dev.growthtech_dw.salesfunnel_channeltouch_captured_before) t2
+  on 
+     t1.key_id = t2.key_id
+     and ifnull(t1.touch_id, '') = ifnull(t2.touch_id, '')
+     and ifnull(t1.sf_opportunity_id, '') = ifnull(t2.sf_opportunity_id, '')
+     and ifnull(t1.sf_journey_id, '') = ifnull(t2.sf_journey_id, '')
+     and ifnull(t1.model,'') = ifnull(t2.model,'')
+),
+prod as (
+select count(distinct touch_id, key_id, sf_journey_id, sf_opportunity_id, model) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_channeltouch_captured_before
+),
+dev as (
+select count(distinct touch_id, key_id, sf_journey_id, sf_opportunity_id, model) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_channeltouch_captured
+)
+select *
+from (
+  select 'prod vs intersection' as check_point,
+         prod.total_count as value_1,
+         match.total_count as value_2,
+         prod.total_count - match.total_count as diff,
+         diff / prod.total_count as pct
+    from prod, match
+  union all
+    select 'dev vs intersection' as check_point,
+         dev.total_count as value_1,
+         match.total_count as value_2,
+         dev.total_count - match.total_count as diff,
+         diff / dev.total_count as pct
+    from dev, match
+   union all
+    select 'prod vs dev' as check_point,
+         prod.total_count as value_1,
+         dev.total_count as value_2,
+         dev.total_count - prod.total_count as diff,
+         diff / prod.total_count as pct
+    from dev, prod
+)
+```
+
+</details>

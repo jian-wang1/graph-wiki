@@ -1,0 +1,54 @@
+created: 20230329205243353
+filter: 
+modified: 20230330181359411
+sprint: 
+task_priority: 
+title: touch all validation
+tmap.edges: {"89fd9069-992b-4eb5-b0d2-302675fbb05c":{"to":"fa106370-4059-4b93-8804-b0d5885171a6","type":"is ansestor of"}}
+tmap.id: 52737de0-12a5-4beb-b446-320307fd0ebc
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+!! Touch Integraty
+!! 
+
+```
+select count(1)
+from  growth__dev.growthtech_dw.salesfunnel_channeltouch_all t1
+full outer join  growth.growthtech_dw.salesfunnel_channeltouch_all t2
+  on t1.touch_id = t2.touch_id
+where t1.touch_id is null
+     or t2.touch_id is null
+```
+
+
+
+```
+with dev as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_all
+where touch_ts<dateadd(day, -14, current_date()) 
+),
+prod as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth.growthtech_dw.salesfunnel_channeltouch_all
+where touch_ts<dateadd(day, -14, current_date()) 
+)
+select *
+from ( 
+    select
+    'total count' as check_point,
+    prod.total_count as value_before ,
+    dev.total_count as value_after,
+    dev.total_count - prod.total_count as change_in_value
+    from prod, dev
+    union all
+    select
+    'touch count' as check_point,
+    prod.touch_count as value_before,
+    dev.touch_count as value_after,
+    dev.touch_count - prod.touch_count as change_in_value
+    from prod, dev
+    )
+where change_in_value <> 0
+```

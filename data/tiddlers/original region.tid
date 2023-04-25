@@ -1,0 +1,41 @@
+created: 20230405162508742
+filter: 
+modified: 20230405163800651
+sprint: 
+task_priority: 
+title: original region
+tmap.edges: 
+tmap.id: b9832598-ad1a-41c1-bf14-476dee3b05f8
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+| COUNT(1) | COUNTRY_CODE | COUNTRY                   | REGION        |
+| 1,152    | CN           | China                     | China         |
+| 497      | HK           | Hong Kong (Greater China) | China         |
+| 215      | TW           | Taiwan (Greater China)    | China         |
+| 12,624   | IN           | India                     | India         |
+| 31,828   | AU           | Australia                 | International |
+| 1,407    | BE           | Belgium                   | International |
+| 2,429    | CZ           | Czech Republic            | International |
+| 278      | DK           | Denmark                   | International |
+| 154      | FI           | Finland                   | International |
+| 12,572   | FR           | France                    | International |
+| 32,947   | DE           | Germany                   | International |
+| 97       | HU           | Hungary                   | International |
+| 843      | ID           | Indonesia                 | International |
+| 4,279    | IE           | Ireland                   | International |
+| 1,260    | IT           | Italy                     | International |
+| 482      | MY           | Malaysia                  | International |
+| 4,050    | NL           | Netherlands               | International |
+| 280      | NO           | Norway                    | International |
+| 1,066    | PH           | Philippines               | International |
+| 249,598| US		    | | US & Canada |
+
+
+
+```
+select count(1), country_code, country, region
+from growth.growthtech_dw.salesfunnel_on_demand_marketing_sot
+group by 2,3,4
+order by region, country, country_code
+```

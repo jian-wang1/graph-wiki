@@ -1,8 +1,12 @@
 created: 20230322151457509
-modified: 20230322151505410
+filter: 
+modified: 20230328200756015
+sprint: 
+task_priority: 
 title: sales record tcv/acv impact
 tmap.edges: {"1b6d4006-c3fc-437d-bd36-65bbbc3553f2":{"to":"ebdd3214-eab9-4444-bbe8-8bd42cbe919f","type":"analyze"}}
 tmap.id: 79e7f0ba-1a6d-4dba-bc2b-7c740db0f7db
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

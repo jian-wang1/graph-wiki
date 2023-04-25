@@ -1,0 +1,56 @@
+created: 20230330194333190
+filter: 
+modified: 20230330201247041
+sprint: 
+task_priority: 
+title: salesactivities attribution
+tmap.edges: {"3ae71240-49fb-4ff9-b84e-d05f82f0a8d7":{"to":"15d9a67c-2e77-400f-b132-23ef1fe6cdf3","type":"is ansestor of"}}
+tmap.id: 1b665041-ca96-4ca9-913e-24de54236a6e
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+[img[salesactivities attrib.png]]
+
+<details>
+
+```
+with match as ( 
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_salesactivities t1
+inner join  growth__dev.growthtech_dw.salesfunnel_attribution_salesactivities_before t2
+  on ifnull(t1.touch_id,'') = ifnull(t2.touch_id, '')
+     and ifnull(t1.sf_opportunity_id, '') = ifnull(t2.sf_opportunity_id, '')
+     and coalesce(t1.journey_id, t1.derived_journey_id, '') = coalesce(t2.journey_id, t2.derived_journey_id, '')
+     --and t1.model = t2.model
+),
+prod as (
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_salesactivities_before
+),
+dev as (
+select count(1) as total_count
+from  growth__dev.growthtech_dw.salesfunnel_attribution_salesactivities
+)
+select *
+from (
+  select 'prod vs intersection' as check_point,
+         prod.total_count as value_1,
+         match.total_count as value_2,
+         prod.total_count - match.total_count as diff 
+    from prod, match
+  union all
+    select 'dev vs intersection' as check_point,
+         dev.total_count as value_1,
+         match.total_count as value_2,
+         dev.total_count - match.total_count as diff 
+    from dev, match
+   union all
+    select 'prod vs dev' as check_point,
+         prod.total_count as value_1,
+         dev.total_count as value_2,
+         dev.total_count - prod.total_count as diff 
+    from dev, prod
+)
+```
+
+</details>

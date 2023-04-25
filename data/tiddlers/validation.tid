@@ -1,0 +1,504 @@
+created: 20230331183412693
+filter: 
+modified: 20230331183550114
+sprint: 
+task_priority: 
+title: validation
+tmap.edges: 
+tmap.id: 70904f17-ccfd-4e87-951f-02973bd24bd2
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+MQL query
+
+<details>
+
+```
+with sales_funnel_channel as(
+
+    select distinct
+        po.sf_opportunity_id
+        , po.opportunity_account_name
+        , po.building_uuid
+        , po.opportunity_created_date
+        , po.created_qtr
+        , po.created_yr
+        , po.product_group
+        , po.stage_name
+        , l.name as building_name
+        , po.market
+        , po.territory
+        , po.region
+        , po.country
+        , po.country_code
+        , po.location_lat
+        , po.location_long
+        , po.net_desks
+        , po.gross_desks
+        , po.channel
+        , po.account_sub_type
+        , po.sales_team
+        , po.net_tcv_sf
+        , po.net_acv_sf
+        , po.contract_commitment_length
+        , po.opportunity_closed_date
+        , po.account_name
+        , po.lead_source
+        , po.lead_source_detail
+        , po.named_account_segment
+        , po.lead_source_sub_type
+        , po.broker_involved
+        , po.broker_involvement_indicated
+        , po.referrer_contact_type
+        , po.lost_reason
+        , po.account_created_qtr_key
+        , po.Small_vs_large
+        , po.SKU
+        , po.my_year
+        , po.named_account
+        , po.channel_prep
+        , po.final_channel
+    from GROWTH.GROWTHTECH_DW.PRIVATE_OFFICE_SALES_OPS po
+    left join CENTRAL.CDM.LOCATIONS l
+    	on po.building_uuid = l.uuid
+    where 
+        po.product_group ilike 'wework'
+        and po.product_group <> 'all access'
+        and po.stage_name <> 'Merged'
+        and po.is_renewal_opportunity = False
+        and po.net_desks > 0
+        and po.lost_reason <> 'Duplicate Opportunity'
+
+),
+
+marketing_funnel as (
+select 
+        mf.*
+		, case 
+        		when mf.new_subchannel ilike '%inbound%' or mf.new_channel ilike '%inbound%' then 'Inbound Call/Email'
+        		when 
+            		mf.new_category ilike 'organic' 
+                    and (
+                            mf.utm_medium ilike 'organic_social' 
+                            or mf.utm_source ilike any (
+                                'facebook'
+                                , 'instagram_stories'
+                                , 'instagram-bio'
+                                , 'instagram-story'
+                                , 'instragram'
+                                , 'kakao'
+                                , 'linkedin'
+                                , 'orginstagram'
+                                , 'orkakaotalk'
+                                , 'ornaverblog'
+                                , 'social'
+                                , 'tiktok'
+                                , 'twitter'
+                                , 'wechat'
+                                , 'youtube')
+                    ) then 'Organic Social'
+                when mf.new_category ilike 'paid media' and mf.new_channel ilike any ('other paid','paid display & video','paid social') then 'Paid Social & Display'
+                when mf.new_category  ilike 'paid media' and mf.new_channel ilike ('paid search') then 'Paid Search'
+                when mf.new_channel ilike 'paid social ' then mf.new_channel
+                when mf.utm_source ilike 'ads-%' then 'Other Paid'
+                when mf.new_category ilike 'organic' and mf.new_subchannel ilike 'direct' then new_subchannel
+                when mf.new_category ilike 'organic' and mf.new_subchannel ilike 'seo' then 'Organic Search'
+                when mf.new_team ilike 'marketing' and mf.new_category ilike 'organic' then 'Organic Search'
+                when mf.new_channel ilike 'listings' then 'Paid Social & Display'
+                when mf.new_team ilike 'marketing' and mf.new_category ilike 'experiential' then 'Events & Webinars'
+                when mf.new_team ilike 'sales' and mf.new_channel ilike 'email' then 'Sales Email'
+                when mf.new_category ilike 'email' then 'Marketing Email'
+                when mf.new_channel ilike 'null' then null
+        		else mf.new_channel
+        	end as channel_detail_new
+     	, case
+                when nvl(mf.journey_lead_source_detail, ' ')ilike '%[Step 1 of 2]%' and utm_source ilike 'qr_codes' then 'High Five MQL'
+                when nvl(mf.journey_lead_source_detail, ' ')ilike '%[Step 1 of 2]%' then 'All Access eComm MQL'
+                when 
+                    nvl(j.product_interests, ' ') ilike '%Flexible%' 
+                    or nvl(mf.journey_lead_source_detail, ' ') ilike any ('%[Product] All Access%' , '%All Access%', '%AA%')
+                    then 'All Access Non-eComm MQL'
+                when nvl(mf.journey_lead_source_detail, ' ') not ilike '%[Step 2 of 2]%' then 'Desk MQL'
+                else null
+        	end as mql_type
+        , l.name as location_name
+    from "GROWTH"."GROWTHTECH_DW"."SALESFUNNEL_CHANNELTOUCH_CAPTURED" mf
+    left join "GROWTH"."GROWTHTECH_DW"."DIM_SF_JOURNEY" j
+                using (sf_journey_id)
+    left join central.cdm.LOCATIONS l
+       on mf.location_uuid = l.uuid
+),
+
+is_journey as(
+    select 
+    	ct.*
+    from marketing_funnel ct
+    where  
+    	nvl(journey_lead_source, ' ') <>'Guest Wifi' 
+    	and nvl(journey_lead_source_detail, ' ') not in ('Hot Desk','We Membership')
+    	and not nvl(journey_lead_source_detail, ' ') ilike '%[Step 2 of 2]%'
+    	and new_team ilike 'marketing'
+    	and not email ilike any ('%@wework.com', '%@test.com')
+    	and not nvl(campaign_parent_sfid, '99') ilike any ('7014Q0000023VH1QAM', '7014Q000001yk0CQAQ', '0064Q00001ZsMQqQAN')          
+    	and activity_type ilike 'journey_created'
+
+),
+
+is_mql as (
+            select
+            sf_journey_id
+            , is_mql
+            , 'other' as pre_mql_type
+            from marketing_funnel
+            where 
+            activity_type ilike 'mql'
+            and sf_journey_id not in (
+                                      select
+                                        sf_journey_id
+                                      from marketing_funnel
+                                      where 
+                                        activity_type ilike 'journey_created'
+                                        and journey_lead_source_detail ilike '%step 1%'
+                                        )
+            union
+
+            select
+            sf_journey_id
+            , is_created_journey as is_mql
+            , 'eComm' as pre_mql_type
+            from marketing_funnel
+            where 
+            activity_type ilike 'journey_created'
+            and journey_lead_source_detail ilike '%step 1%'
+),
+
+is_tour as (
+            select distinct
+                cr.sf_opportunity_id
+                , cr.sf_journey_id
+                , iff(avg(cr.is_created_tour) > 0, 1, 0) as is_created_tour
+                , nvl(cw.is_completed_tour, 0) as is_completed_tour 
+            from marketing_funnel cr
+            left join (
+                        select distinct
+                        sf_opportunity_id
+                        , sf_journey_id
+                        , iff(avg(is_completed_tour) > 0, 1, 0) as is_completed_tour
+                    from marketing_funnel
+                    where 
+                        activity_type ilike 'tour_completed'
+                        and is_completed_tour > 0
+                    group by 1,2
+            )cw
+            using (sf_opportunity_id)
+            where 
+                cr.activity_type ilike 'tour_created'
+                and cr.is_created_tour > 0
+                and cr.region ilike any ('us &%', 'international')
+            group by 1,2,4
+
+),
+
+clean_opportunities_created as(
+    select 
+        to_date(sf.opportunity_created_date) as key_ts
+        , mf.sf_journey_id
+        , sf_opportunity_id
+        , mf.touch_id
+        , mf.building_interested_in_name
+        , mf.touch_id_type
+        , mf.lead_source
+        , mf.lead_source_detail
+        , mf.lead_source_subtype
+        , mf.new_team
+        , mf.new_category
+        , mf.new_channel
+        , mf.new_subchannel
+        , mf.current_stage
+        , mf.sf_account_name
+        , mf.sf_account_id
+        , to_date(sf.opportunity_created_date) as opportunity_created_date
+        , to_date(sf.opportunity_closed_date) as opportunity_closed_date
+        , mf.first_marketing_qualified_lead_date
+        , mf.is_named_account
+        , mf.current_journey_status
+        , mf.product_category
+        , mf.touch_derivation
+        , mf.roe_segment
+        , sf.region
+        , sf.territory
+        , sf.country
+        , sf.market
+        , sf.building_name as building
+        , 0 as gross_desks
+        , sf.gross_desks as created_gross_desk
+        , 0 as net_tcv_sf
+        , 0 as net_acv_sf
+        , sf.net_tcv_sf as created_net_tcv_sf
+        , sf.net_acv_sf as created_net_acv_sf
+        , sf.final_channel as sales_channel
+        , sf.stage_name
+        , 0 as is_created_journey
+        , 0 as is_mql
+        , is_created_opportunity
+        , 0 as is_won_opportunity
+        , nvl(t.is_created_tour, 0) as is_created_tour_opportunity_created
+        , nvl(t.is_completed_tour, 0) as is_completed_tour_opportunity_created
+        , 0 as is_created_tour_opportunity_closed_won
+        , 0 as is_completed_tour_opportunity_closed_won
+        , mf.mql_type
+        , mf.channel_detail_new as channel_detail
+        , sf.sku as sku_s_group
+        , mf.utm_campaign
+        , mf.utm_source
+        , mf.utm_content
+        , mf.utm_term
+        , mf.utm_medium
+        , 'clean_opportunities_created' as source_table
+        , sf.contract_commitment_length
+    from (select * from marketing_funnel where sf_opportunity_id in (select distinct sf_opportunity_id from sales_funnel_channel) and activity_type ilike 'opportunity_created') mf
+    left join sales_funnel_channel sf
+        using (sf_opportunity_id)
+    left join is_journey jm
+        using (sf_journey_id)
+    left join is_mql mql
+        using (sf_journey_id)
+    left join is_tour t
+        using (sf_opportunity_id)
+    where 
+        sf_opportunity_id is not null 
+  
+),
+
+clean_opportunities_closed_won as(
+    select
+        to_date(sf.opportunity_closed_date) as key_ts
+        , mf.sf_journey_id
+        , sf_opportunity_id
+        , mf.touch_id
+        , mf.touch_id_type
+        , mf.building_interested_in_name
+        , mf.lead_source
+        , mf.lead_source_detail
+        , mf.lead_source_subtype
+        , mf.new_team
+        , mf.new_category
+        , mf.new_channel
+        , mf.new_subchannel
+        , mf.current_stage
+        , mf.sf_account_name
+        , mf.sf_account_id
+        , to_date(sf.opportunity_created_date) as opportunity_created_date
+        , to_date(sf.opportunity_closed_date) as opportunity_closed_date
+        , mf.first_marketing_qualified_lead_date
+        , mf.is_named_account
+        , mf.current_journey_status
+        , mf.product_category
+        , mf.touch_derivation
+        , mf.roe_segment
+        , sf.region
+        , sf.territory
+        , sf.country
+        , sf.market
+        , sf.building_name as building
+        , sf.gross_desks
+        , 0 as created_gross_desk
+        , sf.net_tcv_sf
+        , sf.net_acv_sf
+        , 0 as created_net_tcv_sf
+        , 0 as created_net_acv_sf
+        , sf.final_channel as sales_channel
+        , sf.stage_name
+        , 0 as is_created_journey
+        , 0 as is_mql
+        , 0 as is_created_opportunity
+        , 1 as is_won_opportunity
+        , 0 as is_created_tour_opportunity_created
+        , 0 as is_completed_tour_opportunity_created
+        , nvl(t.is_created_tour, 0) as is_created_tour_opportunity_closed_won
+        , nvl(t.is_completed_tour, 0) as is_completed_tour_opportunity_closed_won
+        , mf.mql_type
+        , mf.channel_detail_new as channel_detail
+        , sf.sku as sku_s_group
+        , mf.utm_campaign
+        , mf.utm_source
+        , mf.utm_content
+        , mf.utm_term
+        , mf.utm_medium
+        , 'clean_opportunities_closed_won' as source_table
+        , sf.contract_commitment_length
+    from (select * from marketing_funnel where sf_opportunity_id in (select distinct sf_opportunity_id from sales_funnel_channel where stage_name ilike 'closed won') and activity_type ilike 'opportunity_closed_won') mf
+    left join sales_funnel_channel sf
+        using (sf_opportunity_id)
+    left join is_journey jm
+        using (sf_journey_id)
+    left join is_mql mql
+        using (sf_journey_id)
+    left join is_tour t
+        using (sf_opportunity_id)
+    where 
+        sf_opportunity_id is not null
+  
+),
+
+clean_journeys_and_mqls as(
+    select 
+        j.key_ts
+        , j.sf_journey_id
+        , null as sf_opportunity_id
+        , j.touch_id
+        , j.touch_id_type
+        , j.building_interested_in_name
+        , j.journey_lead_source as lead_source
+        , j.journey_lead_source_detail as lead_source_detail
+        , j.lead_source_subtype
+        , j.new_team
+        , j.new_category
+        , j.new_channel
+        , j.new_subchannel
+        , j.current_stage
+        , j.sf_account_name
+        , j.sf_account_id
+        , null as opportunity_created_date
+        , null as opportunity_closed_date
+        , j.first_marketing_qualified_lead_date
+        , j.is_named_account
+        , j.current_journey_status
+        , j.product_category
+        , j.touch_derivation
+        , j.roe_segment
+        , j.region
+       	, j.territory
+        , j.country
+        , j.market
+        , j.location_name as building
+        , 0 as gross_desk
+        , 0 as created_gross_desk
+        , 0 as net_tcv_sf
+        , 0 as net_acv_sf
+        , 0 as created_net_tcv_sf
+        , 0 as created_net_acv_sf
+        , case
+                when j.new_team ilike 'marketing' then 'Marketing'
+                else 'Other'
+                end
+            as sales_channel
+        , 'TOF' as stage_name
+        , j.is_created_journey
+        , mql.is_mql
+        , 0 as is_created_opportunity
+        , 0 as is_won_opportunity
+        , 0 as is_created_tour_opportunity_created
+        , 0 as is_completed_tour_opportunity_created
+        , 0 as is_created_tour_opportunity_closed_won
+        , 0 as is_completed_tour_opportunity_closed_won
+        , mql_type
+        , j.channel_detail_new as channel_detail
+        , null as sku_s_group
+        , j.utm_campaign
+        , j.utm_source
+        , j.utm_content
+        , j.utm_term
+        , j.utm_medium
+        , 'clean_journeys_and_mqls' as source_table
+        , 0 as contract_commitment_length
+    from is_journey j
+    left join is_mql mql
+        using (sf_journey_id)
+
+),
+
+union_data as (
+    	select * from clean_opportunities_created
+
+    union
+    	select * from clean_opportunities_closed_won
+
+    union
+    	select * from clean_journeys_and_mqls
+
+)
+
+select
+        ud.key_ts
+        , ud.sf_journey_id
+        , ud.sf_opportunity_id
+        , ud.touch_id
+        , ud.touch_id_type
+        , ud.building_interested_in_name
+        , ud.lead_source
+        , ud.lead_source_detail
+        , ud.lead_source_subtype
+        , ud.new_team
+        , ud.new_category
+        , ud.new_channel
+        , ud.new_subchannel
+        , ud.current_stage
+        , ud.sf_account_name
+        , ud.sf_account_id
+        , ud.opportunity_created_date
+        , ud.opportunity_closed_date
+        , ud.first_marketing_qualified_lead_date
+        , ud.is_named_account
+        , ud.current_journey_status
+        , ud.product_category
+        , ud.touch_derivation
+        , ud.roe_segment
+        , ud.region
+        , case
+            	when ud.territory ilike any ('Germany & Northern Europe', 'Northern & Central Europe', 'Germany & Central Europe') then 'Germany & Central Europe'
+            	when ud.territory ilike any ('Southern Europe', 'Southern Europe, Benelux, and Nordics') then 'Southern Europe, Benelux, and Nordics' 
+            	when ud.territory ilike any ('UK, Ireland & Emerging Markets', 'UK, Ireland, Russia, & Emerging Markets') then 'UK, Ireland, Russia, & Emerging Markets'
+            	when ud.territory ilike any ('Central', 'Mid-West', 'NorthWest', 'Central/West', 'Central-West', 'SouthWest', 'West') then 'Central-West'
+            	else ud.territory
+        	end as territory
+        , ud.country
+        , ud.market
+        , ud.building
+        , ud.gross_desks
+        , ud.created_gross_desk
+        , ud.net_tcv_sf
+        , ud.net_acv_sf
+        , ud.created_net_tcv_sf
+        , ud.created_net_acv_sf
+        , ud.sales_channel
+        , ud.stage_name
+        , ud.is_created_journey
+        , ud.is_mql
+        , ud.is_created_opportunity
+        , ud.is_won_opportunity
+        , ud.is_created_tour_opportunity_created
+        , ud.is_completed_tour_opportunity_created
+        , ud.is_created_tour_opportunity_closed_won
+        , ud.is_completed_tour_opportunity_closed_won
+        , ud.mql_type
+        , ud.channel_detail
+        , ud.sku_s_group
+        , ud.source_table
+        , ud.contract_commitment_length
+        , trim(e.email_name) as email_name
+        , e.sfmc_bu
+        , case 
+        		when ea.audience is not null then ea.audience 
+        		when split_part(rtrim(e.email_name), '_',  4) = 'BM' or split_part(rtrim(e.email_name), '_',  5) = 'BM' then 'Brokers' 
+        		when split_part(rtrim(e.email_name), '_',  4) = 'PNM'or split_part(rtrim(e.email_name), '_',  5) = 'PNM' then 'Prospects' 
+        		when split_part(rtrim(e.email_name), '_',  4) = 'MM' or split_part(rtrim(e.email_name), '_',  5) = 'MM' then 'Member' 
+        		when split_part(rtrim(e.email_name), '_',  4) = 'EM' or split_part(rtrim(e.email_name), '_',  5) = 'EM'then 'Ex-Member'
+        		else null 
+        	end as email_audience
+        , to_date(ud.key_ts) as fm_date
+        , to_date(date_trunc('week', ud.key_ts)) as fm_week
+        , to_date(date_trunc('month', ud.key_ts)) as fm_month
+        , ud.utm_campaign
+        , ud.utm_source
+        , ud.utm_content
+        , ud.utm_term
+        , ud.utm_medium
+    from union_data ud
+    left join "GROWTH"."GROWTHTECH_DW"."FACT_SFMC_EMAIL_EVENT" e
+     	on concat(e.sfmc_event_id,'~',e.sfmc_bu,'~', E.event_type) = trim(ud.touch_id)
+	left join "FIVETRAN"."GOOGLE_SHEETS_MARKETING"."EMAIL_AUDIENCE" ea 
+    	on trim(ea.email_name) = rtrim (e.email_name)
+```
+
+</details>

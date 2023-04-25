@@ -1,7 +1,10 @@
 created: 20230307202444236
+filter: 
 modified: 20230315185408692
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: primary_reservation_deal_summary_base
 tmap.edges: {"b5d86a76-fa42-4575-b93d-c6ecf201c9b5":{"to":"4571221d-8b3b-45bb-9535-f6af08724a25","type":"aggregate"}}
 tmap.id: a9d6749d-d9fe-4d5d-844e-510e8d2d2225
+tmap.style: 
 type: text/vnd.tiddlywiki

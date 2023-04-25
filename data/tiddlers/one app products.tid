@@ -1,0 +1,14 @@
+created: 20230410150650281
+filter: 
+modified: 20230410153232271
+sprint: 
+task_priority: 
+title: one app products
+tmap.edges: {"5bd74c37-29dc-4365-a4d6-ee590df2f84b":{"to":"de23f0a0-650d-4071-9895-5f10c230dd44","type":"consist of"},"e84101fb-8b1e-4f38-a8a5-55cd897e1597":{"to":"044da8c1-86fe-4022-807a-1bd880d6d0a7","type":"consist of"},"7b4ac82b-522a-486e-9430-1e2383253050":{"to":"b2730abd-c498-4c4e-a226-8b06d642388a","type":"consist of"}}
+tmap.id: 260b9822-a300-455b-a651-15d78a6dd787
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+* one-app
+* rooms
+* segment

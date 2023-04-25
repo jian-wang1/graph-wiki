@@ -1,9 +1,12 @@
 created: 20230314154130930
+filter: 
 modified: 20230315183227094
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: channeltouch_all_with_sfcontact
-tmap.edges: {}
+tmap.edges: {"57901354-d6ec-4600-9dd1-98a29f071e9b":{"to":"a9dc7c1b-804e-42ee-9252-e65ee337315c","type":"aggregate"}}
 tmap.id: 680856a1-d910-4dba-bacf-31a95a68a3c5
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 [[model link|https://github.com/WeConnect/airflow-central-data/blob/master/dags/sales/salesfunnel/models/salesfunnel_reporting/salesfunnel_channeltouch_all_with_sfcontact.sql]]

@@ -1,9 +1,12 @@
 created: 20230316221511595
+filter: 
 modified: 20230316223123759
-tags: [[model field]]
+sprint: 
+task_priority: 
 title: srb.sales_record_reservation_type
 tmap.edges: {"02f8bfa9-7811-494b-b01a-e96e535e088e":{"to":"fd9931dd-529e-43b8-ab41-d0601686c26e","type":"is field of"},"84ff96c9-b552-48ba-953e-07f1375d11be":{"to":"166397bd-d08e-469a-a199-e95bbf5060a4","type":"impact"}}
 tmap.id: 0d02acf1-ac69-409d-be63-078069a03087
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 

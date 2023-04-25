@@ -1,9 +1,12 @@
 created: 20230314204721930
+filter: 
 modified: 20230322201840767
-tags: [[data model]]
+sprint: 
+task_priority: 
 title: dim_sf_journey
-tmap.edges: {}
+tmap.edges: {"d0745724-fe9e-4bff-bb27-d379631613c7":{"to":"a9dc7c1b-804e-42ee-9252-e65ee337315c","type":"aggregate"}}
 tmap.id: f0b790f2-2445-419a-92f9-c61c794a7075
+tmap.style: 
 type: text/vnd.tiddlywiki
 
 | EMAIL             | PHONE           | JOURNEY_CREATED_TS            | JOURNEY_ID         |

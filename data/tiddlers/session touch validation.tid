@@ -1,0 +1,39 @@
+created: 20230330145143475
+filter: 
+modified: 20230330152101708
+sprint: 
+task_priority: 
+title: session touch validation
+tmap.edges: {"87fa44ea-bb7b-4bed-b322-825bd3908640":{"to":"52737de0-12a5-4beb-b446-320307fd0ebc","type":"is ansestor of"}}
+tmap.id: 270bf116-2b75-4102-a9f6-fdca9932f7da
+tmap.style: 
+type: text/vnd.tiddlywiki
+
+
+```
+with dev as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth__dev.growthtech_dw.salesfunnel_channeltouch_sessions
+),
+prod as (
+select count(1) as total_count, count(distinct touch_id) as touch_count
+from growth.growthtech_dw.salesfunnel_channeltouch_sessions
+)
+select *
+from ( 
+    select
+    'total count' as check_point,
+    prod.total_count as value_before ,
+    dev.total_count as value_after,
+    dev.total_count - prod.total_count as change_in_value
+    from prod, dev
+    union all
+    select
+    'touch count' as check_point,
+    prod.touch_count as value_before,
+    dev.touch_count as value_after,
+    dev.touch_count - prod.touch_count as change_in_value
+    from prod, dev
+    )
+where change_in_value <> 0
+```

@@ -1,6 +1,10 @@
 created: 20230324184713407
+filter: 
 modified: 20230324184713407
+sprint: 
+task_priority: 
 title: User A
 tmap.edges: {"1c9cdd30-ddf4-4b99-8513-9b14b1404921":{"to":"f22208ff-ad9f-4f7f-b580-bcda28ba34d9","type":"share with"}}
 tmap.id: 4550cce6-592d-43c9-bdfb-684ad1fec492
+tmap.style: 
 type: text/vnd.tiddlywiki
